@@ -17,6 +17,8 @@ const SideMenuCategories = () => {
     "Malappuram", "Kozhikode", "Wayanad", "Kannur", "Kasaragod",
   ];
 
+  const newsFrom = ["Kerala News", "India News", "World News"]
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -46,6 +48,7 @@ const SideMenuCategories = () => {
     return () => window.removeEventListener("resize", checkOverflow);
   }, [categories]);
 
+  console.log("selectedCategory : ",selectedCategory)
   return (
     <>
       {/* Sidebar for large screens */}
@@ -85,7 +88,7 @@ const SideMenuCategories = () => {
               />
               <span>News</span>
             </div>
-            <span>{isNewsOpen ? "▲" : "▼"}</span>
+            <span className="text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
           </div>
           {isNewsOpen && (
             <ul className="pl-10 space-y-2 mt-2">
@@ -120,7 +123,7 @@ const SideMenuCategories = () => {
               />
               <span>District News</span>
             </div>
-            <span>{isDistrictOpen ? "▲" : "▼"}</span>
+            <span className="text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
           </div>
           {isDistrictOpen && (
             <ul className="pl-10 space-y-2 mt-2">
@@ -162,119 +165,138 @@ const SideMenuCategories = () => {
         </ul>
       </div>
 
+      
       {/* Horizontal Scrollable Navbar for Mobile */}
+      
       <div
-        ref={scrollContainerRef}
-        className=" tracking-wide lg:hidden w-full flex items-center overflow-x-scroll h-10 overflow-y-hidden relative text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+      ref={scrollContainerRef}
+      className="tracking-wide lg:hidden w-full flex items-center overflow-x-scroll h-10 overflow-y-hidden relative text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
+    >
+      {/* Latest News */}
+      <button
+        className={`px-4 py-2 whitespace-nowrap ${
+          selectedCategory === "Latest News"
+            ? "text-[#2872AF] font-semibold"
+            : "bg-gray-100"
+        }`}
+        onClick={() => setSelectedCategory("Latest News")}
       >
+        {selectedCategory === "Latest News" ? "Latest News" : "Latest News"}
+      </button>
 
+      {/* News Dropdown */}
+
+      <div className="relative inline-flex dropdown-menu">
         <button
-          className={`px-4 py-2 whitespace-nowrap ${
-            selectedCategory === "Latest News" ? "text-[#2872AF] font-semibold " : "bg-gray-100"
+          className={`px-4 py-2 flex items-center whitespace-nowrap ${
+            newsFrom.includes(selectedCategory) ? "text-[#2872AF] font-semibold" : "bg-gray-100"
           }`}
-          onClick={() => setSelectedCategory("Latest News")}
+          onClick={() => setIsNewsOpen(!isNewsOpen)}
         >
-          Latest News
+          {newsFrom.includes(selectedCategory) ? selectedCategory : "News"}
+          <span className="ml-2 text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
         </button>
-
-        {/* News Dropdown */}
-        <div className="relative inline-flex">
-          <button
-            className="px-4 py-2 flex items-center whitespace-nowrap bg-gray-100"
-            onClick={() => setIsNewsOpen(!isNewsOpen)}
-          >
-            News <span className="ml-2">{isNewsOpen ? "▲" : "▼"}</span>
-          </button>
-          {isNewsOpen && (
-            <ul className="absolute left-0 mt-2 w-40 bg-white shadow-md z-50">
-              {["Kerala", "India", "World News"].map((item) => (
-                <li
-                  key={item}
-                  className={`cursor-pointer py-2 px-4 ${
-                    selectedCategory === item ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    setSelectedCategory(item);
-                    setIsNewsOpen(false);
-                  }}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* District News Dropdown */}
-        <div className="relative inline-flex">
-          <button
-            className="px-4 py-2 flex items-center whitespace-nowrap bg-gray-100"
-            onClick={() => setIsDistrictOpen(!isDistrictOpen)}
-          >
-            District News <span className="ml-2">{isDistrictOpen ? "▲" : "▼"}</span>
-          </button>
-          {isDistrictOpen && (
-            <ul className="absolute left-0 mt-2 w-40 bg-white shadow-md z-10">
-              {districtsInKerala.map((district) => (
-                <li
-                  key={district}
-                  className={`cursor-pointer py-2 px-4 ${
-                    selectedCategory === district ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    setSelectedCategory(district);
-                    setIsDistrictOpen(false);
-                  }}
-                >
-                  {district}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Other Categories */}
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            className={`px-4 py-2 rounded ${
-              selectedCategory === category.name ? "text-[#2872AF] font-semibold" : "bg-gray-100"
-            }`}
-            onClick={() => setSelectedCategory(category.name)}
-          >
-            {category.name}
-          </button>
-        ))}
-
-        {/* District Buttons */}
-        {districtsInKerala.map((district) => (
-          <button
-            key={district}
-            className={`px-4 py-2 rounded ${
-              selectedCategory === district ? "text-[#2872AF] font-semibold" : "bg-gray-100"
-            }`}
-            onClick={() => setSelectedCategory(district)}
-          >
-            {district}
-          </button>
-        ))}
-        
-        {/* Plus icon if overflowing */}
-      {/* Plus icon if overflowing */}
-      {/* {isOverflowing && scrollContainerRef.current && (
-          <button
-            className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-900 "
-            onClick={() => {
-              if (scrollContainerRef.current) {
-                scrollContainerRef.current.scrollLeft += 100;
-              }
-            }}
-          >
-            +
-          </button>
-        )} */}
-
+        {isNewsOpen && (
+          <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
+            {newsFrom.map((district) => (
+              <li
+                key={district}
+                className={`cursor-pointer py-2 px-4 ${
+                  selectedCategory === district ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
+                }`}
+                onClick={() => {
+                  setSelectedCategory(district);
+                  setIsNewsOpen(false);
+                }}
+              >
+                {district}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
+
+      {/* District News Dropdown */}
+      <div className="relative inline-flex dropdown-menu">
+        <button
+          className={`px-4 py-2 flex items-center whitespace-nowrap ${
+            districtsInKerala.includes(selectedCategory) ? "text-[#2872AF] font-semibold" : "bg-gray-100"
+          }`}
+          onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+        >
+          {districtsInKerala.includes(selectedCategory) ? selectedCategory : "District News"}
+          <span className="ml-2 text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
+        </button>
+        {isDistrictOpen && (
+          <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
+            {districtsInKerala.map((district) => (
+              <li
+                key={district}
+                className={`cursor-pointer py-2 px-4 ${
+                  selectedCategory === district ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
+                }`}
+                onClick={() => {
+                  setSelectedCategory(district);
+                  setIsDistrictOpen(false);
+                }}
+              >
+                {district}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+
+
+
+
+
+      {/* Other Categories */}
+      {categories.map((category) => (
+        <button
+          key={category.id}
+          className={`px-4 py-2 rounded ${
+            selectedCategory === category.name
+              ? "text-[#2872AF] font-semibold"
+              : "bg-gray-100"
+          }`}
+          onClick={() => setSelectedCategory(category.name)}
+        >
+          {selectedCategory === category.name ? ` ${category.name}` : category.name}
+        </button>
+      ))}
+
+      {/* District Buttons */}
+      {districtsInKerala.map((district) => (
+        <button
+          key={district}
+          className={`px-4 py-2 rounded ${
+            selectedCategory === district
+              ? "text-[#2872AF] font-semibold"
+              : "bg-gray-100"
+          }`}
+          onClick={() => setSelectedCategory(district)}
+        >
+          {selectedCategory === district ? ` ${district}` : district}
+        </button>
+      ))}
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </>
   );
