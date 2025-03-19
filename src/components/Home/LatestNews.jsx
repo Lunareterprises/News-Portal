@@ -26,7 +26,7 @@ const LatestNews = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
-      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 z-10">
+      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0  hidden lg:block">
         Latest News
       </h2>
 

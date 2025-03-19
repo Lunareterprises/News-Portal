@@ -3,19 +3,21 @@ import Header from "../commonUI/Header/Header";
 import SideMenu from "@/components/Home/SideMenuCategories";
 import LatestNews from "./LatestNews";
 import TrendingNews from "./TrendingNews";
+import ResponsiveSmalview from "./ResponsiveSmalview";
 
 function HomeIndex() {
-
-
   return (
     <div className="w-full">
       <Header />
-      <div className="flex flex-col gap-6 lg:flex-row ">
+      <div className="flex flex-col gap-6 lg:flex-row">
         <SideMenu />
-        <div className="flex flex-col gap-6  md:flex-row flex-1 ">
-          <LatestNews/>
+        <div className="hidden lg:flex flex-col gap-6 md:flex-row flex-1">
+          <LatestNews />
           <TrendingNews />
         </div>
+      </div>
+      <div className="block lg:hidden">
+        <ResponsiveSmalview />
       </div>
     </div>
   );
