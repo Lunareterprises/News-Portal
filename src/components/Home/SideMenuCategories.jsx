@@ -267,20 +267,6 @@ const SideMenuCategories = () => {
         </button>
       ))}
 
-      {/* District Buttons */}
-      {districtsInKerala.map((district) => (
-        <button
-          key={district}
-          className={`px-4 py-2 rounded ${
-            selectedCategory === district
-              ? "text-[#2872AF] font-semibold"
-              : "bg-gray-100"
-          }`}
-          onClick={() => setSelectedCategory(district)}
-        >
-          {selectedCategory === district ? ` ${district}` : district}
-        </button>
-      ))}
     </div>
 
 
