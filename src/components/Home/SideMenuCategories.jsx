@@ -52,8 +52,8 @@ const SideMenuCategories = () => {
   return (
     <>
       {/* Sidebar for large screens */}
-      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block ">
-        <ul className="space-y-2 overflow-y-auto max-h-[calc(100vh-50px)] scrollbar-hide scroll-smooth ">
+      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block  ">
+        <ul className="space-y-2 overflow-y-auto max-h-[calc(100vh)] scrollbar-hide scroll-smooth">
           {/* Latest News */}
           <li
             className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
