@@ -1,0 +1,9 @@
+[
+    { "name": "Alice Johnson", "role": "UI/UX Designer", "image": "/images/OurTeam/ourTeam1.png" },
+    { "name": "Bob Smith", "role": "Frontend Developer", "image": "/images/OurTeam/ourTeam2.png" },
+    { "name": "Charlie Brown", "role": "Backend Developer", "image": "/images/OurTeam/ourTeam3.png" },
+    { "name": "David Lee", "role": "Project Manager", "image": "/images/OurTeam/ourTeam4.png" },
+    { "name": "David Lee", "role": "Project Manager", "image": "/images/OurTeam/ourTeam5.png" }
+
+  ]
+  

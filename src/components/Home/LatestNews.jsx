@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const LatestNews = () => {
   const [news, setNews] = useState([]);
+  const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
@@ -17,7 +18,18 @@ const LatestNews = () => {
       }
     };
 
+    const fetchAds = async () => {
+      try {
+        const response = await fetch("/data/ads.json");
+        const data = await response.json();
+        setAds(data);
+      } catch (error) {
+        console.error("Error fetching ads:", error);
+      }
+    };
+
     fetchNews();
+    fetchAds();
   }, []);
 
   const toggleReadMore = (id) => {
@@ -26,12 +38,12 @@ const LatestNews = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
-      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0  hidden lg:block">
+      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block">
         Latest News
       </h2>
 
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
-        {news.map((article) => {
+        {news.map((article, index) => {
           const isExpanded = expanded[article.id];
           const shortText = article.description.substring(0, 250);
           const fadedText = article.description.substring(250, 550);
@@ -65,13 +77,23 @@ const LatestNews = () => {
               </p>
 
               {isExpanded && (
-                
                 <button
                   onClick={() => toggleReadMore(article.id)}
-                  className="bg-[#ff773a] font-medium   text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
+                  className="bg-[#ff773a] font-medium text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
                 >
                   Read Less
                 </button>
+              )}
+
+              {/* Add dynamically fetched poster every 2 news articles */}
+              {index % 2 === 1 && ads.length > 0 && (
+                <div className="my-6 w-full flex justify-center ">
+                  <img
+                    src={ads[index % ads.length]?.image}
+                    alt={ads[index % ads.length]?.title || "Advertisement"}
+                    className="w-full"
+                  />
+                </div>
               )}
             </div>
           );

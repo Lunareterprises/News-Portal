@@ -1,0 +1,18 @@
+[
+    {
+      "id": 1,
+      "image": "/images/Ads/ad1.png",
+      "title": "Special Offer Ad"
+    },
+    {
+      "id": 2,
+      "image": "/images/Ads/ad2.png",
+      "title": "New Product Launch"
+    },
+    {
+      "id": 3,
+      "image": "/images/Ads/ad1.png",
+      "title": "Limited Time Discount"
+    }
+  ]
+  
