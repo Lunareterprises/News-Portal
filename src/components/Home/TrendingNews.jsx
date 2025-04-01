@@ -1,24 +1,25 @@
 "use client";
-import {  useEffect,useState } from "react";
-
+import { useEffect, useState } from "react";
 import Carousel_component from "./Carousel_component";
+import AdsComponent from "./AdsComponent"; // Import AdsComponent
 
 const TrendingNews = () => {
   const [expanded, setExpanded] = useState({});
-      const [news, setNews] = useState([]);
-      useEffect(() => {
-        const fetchNews = async () => {
-          try {
-            const response = await fetch("/data/news.json");
-            const data = await response.json();
-            setNews(data);
-          } catch (error) {
-            console.error("Error fetching news:", error);
-          }
-        };
-    
-        fetchNews();
-      }, []);
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch("/data/news.json");
+        const data = await response.json();
+        setNews(data);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
+
+    fetchNews();
+  }, []);
 
   const toggleReadMore = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -27,12 +28,13 @@ const TrendingNews = () => {
   return (
     <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
       
+      <AdsComponent />
+
       <div className="hidden lg:block">
         <Carousel_component />
-        
       </div>
 
-      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0  hidden lg:block">
+      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block">
         Trending & Breaking News
       </h2>
 
@@ -56,9 +58,9 @@ const TrendingNews = () => {
               <p className="text-gray-700 text-sm mt-4 leading-relaxed relative">
                 {shortText}
                 {!isExpanded && (
-                  <span className=" text-gray-300">
+                  <span className="text-gray-300">
                     {fadedText}
-                    <span className="absolute left-0 right-0 bottom-0 w-full  h-24 flex items-center justify-center">
+                    <span className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center">
                       <button
                         onClick={() => toggleReadMore(article.id)}
                         className="bg-[#2872AF] font-medium text-white px-4 py-1 cursor-pointer whitespace-nowrap"
@@ -72,10 +74,9 @@ const TrendingNews = () => {
               </p>
 
               {isExpanded && (
-                
                 <button
                   onClick={() => toggleReadMore(article.id)}
-                  className="bg-[#ff773a] font-medium   text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
+                  className="bg-[#ff773a] font-medium text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
                 >
                   Read Less
                 </button>
