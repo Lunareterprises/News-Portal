@@ -1,7 +1,6 @@
 [
     
-    { "id": 2, "name": "Cricket", "image": "/images/categories/images2.png" },
-    { "id": 3, "name": "Football", "image": "/images/categories/images3.jpg" },
+    { "id": 2, "name": "Sports", "image": "/images/categories/images2.png" },
     { "id": 4, "name": "Crime", "image": "/images/categories/images4.png" },
     { "id": 5, "name": "Politics", "image": "/images/categories/images5.png" },
     { "id": 6, "name": "Movie & Entertainment", "image": "/images/categories/images6.jpg" },
