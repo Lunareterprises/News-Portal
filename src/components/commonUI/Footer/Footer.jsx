@@ -43,7 +43,8 @@ const Footer = () => (
         <div className="py-4  flex flex-col gap-3">
           <h1 className="text-base font-semibold mb-3 whitespace-nowrap">ADDRESS</h1>
           <p className="text-sm leading-relaxed">
-            World One 6174/A Pazhanjiyoorkonam Pattoor p.o  
+            World One 617/A
+            Pazhanjiyoorkonam Pattoor p.o  
             Padanilam Nooranad Alappuzha pin- 690529
           </p>
           {/* Email */}
