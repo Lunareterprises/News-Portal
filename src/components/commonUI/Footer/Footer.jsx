@@ -58,7 +58,6 @@ const Footer = () => (
               <div className="flex flex-col gap-1 text-sm">
                 <p className='whitespace-nowrap'>+91 9846528787,</p>
                 <p className='whitespace-nowrap'>+91 9497528787,</p>
-                <p className='whitespace-nowrap'>+91 9037049149</p>
               </div>
             </div>
         </div>
