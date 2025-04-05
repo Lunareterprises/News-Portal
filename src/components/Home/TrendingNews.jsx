@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Carousel_component from "./Carousel_component";
-import AdsComponent from "./AdsComponent"; // Import AdsComponent
+import AdsComponent from "./AdsComponent";
 
 const TrendingNews = () => {
   const [expanded, setExpanded] = useState({});
   const [news, setNews] = useState([]);
+  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -20,6 +21,61 @@ const TrendingNews = () => {
 
     fetchNews();
   }, []);
+
+  const addWatermark = (imageSrc, id) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        
+        // Set canvas dimensions to match the image
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw the original image
+        ctx.drawImage(img, 0, 0);
+        
+        // Add watermark text
+        ctx.font = `${img.width / 20}px Arial`;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        
+        // Rotate the canvas for diagonal watermark
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 6); // Rotate by -30 degrees
+        ctx.fillText("YourSite.com", 0, 0);
+        ctx.restore();
+        
+        // Convert to data URL
+        const watermarkedImage = canvas.toDataURL("image/jpeg");
+        setLoadedImages(prev => ({
+          ...prev,
+          [`news-${id}`]: watermarkedImage
+        }));
+        resolve(watermarkedImage);
+      };
+      
+      img.onerror = () => {
+        console.error("Error loading image for watermarking");
+        resolve(imageSrc); // Fall back to original image
+      };
+      
+      img.src = imageSrc;
+    });
+  };
+
+  useEffect(() => {
+    // Process only news images
+    news.forEach((article) => {
+      if (article.image && !loadedImages[`news-${article.id}`]) {
+        addWatermark(article.image, article.id);
+      }
+    });
+  }, [news]);
 
   const toggleReadMore = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -45,11 +101,12 @@ const TrendingNews = () => {
           const shortText = article.description.substring(0, 250);
           const fadedText = article.description.substring(250, 550);
           const remainingText = article.description.substring(550);
+          const imageKey = `news-${article.id}`;
 
           return (
             <div key={article.id} className="mb-6 relative">
               <img
-                src={article.image}
+                src={loadedImages[imageKey] || article.image}
                 alt={article.title}
                 className="w-full h-56 object-cover"
               />

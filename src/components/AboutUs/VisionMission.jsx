@@ -4,7 +4,7 @@ function VisionMission() {
   return (
     <div className='flex flex-col lg:flex-row  gap-3 lg:gap-12'>
         <div className='bg-[#0C8CE90F] p-6'>
-            <h className='text-2xl font-bold text-start  uppercase'>VISION</h>
+            <h1 className='text-2xl font-bold text-start  uppercase'>VISION</h1>
             <p className='mb-6 text-base mt-6'>Our vision is to be a leading digital news platform that empowers individuals with accurate, unbiased, and insightful information. We strive to bridge the gap between news and readers by delivering timely updates with clarity and integrity. Through innovation, user engagement, and a commitment to journalistic excellence, we aim to create a dynamic space where people can stay informed, think critically, and engage with the world around them. Our goal is to redefine the way news is consumed, making it more accessible, interactive, and impactful for a global audience.</p>
         </div>
         <div className='bg-[#0C8CE90F] p-6'>
