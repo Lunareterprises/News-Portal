@@ -62,7 +62,6 @@ function OurTeamCarousel() {
     ],
   };
 
-  const Base_url = "https://lunarsenterprises.com:8000/";
   return (
     <div className="relative w-full mt-6 px-4">
       <h2 className="text-center font-bold text-2xl md:text-3xl mb-6">
@@ -74,7 +73,10 @@ function OurTeamCarousel() {
             <div key={index} className="px-2">
               <div className="  overflow-hidden text-start">
                 <img
-                  src={Base_url + member.t_image}
+                
+
+                 src={`${process.env.NEXT_PUBLIC_API_URL}/${member.t_image}`}
+                  
                   alt={member.t_name}
                   className="w-full h-52 object-cover"
                 />

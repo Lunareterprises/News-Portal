@@ -14,7 +14,7 @@ const LatestNews = () => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
   };
 
-  const base_url = "https://lunarsenterprises.com:8000/";
+ 
 
   useEffect(() => {
     const fetchNews = async () => {

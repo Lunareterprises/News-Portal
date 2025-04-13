@@ -7,7 +7,7 @@ import { banner } from "./carousel_Service";
 
 function Carousel_component() {
   const [news, setNews] = useState([]);
-  const base_url = "https://lunarsenterprises.com:8000/";
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -36,7 +36,7 @@ function Carousel_component() {
           {news.slice(0, 5).map((article) => (
             <div key={article.id}>
               <img
-                src={base_url + article.b_image}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${article.b_image}`}
                 alt={article.title}
                 className="w-full h-48 lg:h-64 object-cover"
               />
