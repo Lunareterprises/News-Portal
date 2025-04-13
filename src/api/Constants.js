@@ -1,11 +1,11 @@
 export const API_ENDPOINTS ={
 
 //contact
-CONTACT: '/contact',
+CONTACT: '/worldone/contact',
 //Banner
-BANNER: '/admin/banner',
+BANNER: '/worldone/admin/banner',
 //Team
-TEAM: '/admin/team',
+TEAM: '/worldone/admin/team',
 //Ads
-ADS: '/admin/ads',
+ADS: '/worldone/admin/ads',
 }
