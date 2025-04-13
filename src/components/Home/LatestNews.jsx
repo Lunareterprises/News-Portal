@@ -7,7 +7,11 @@ const LatestNews = () => {
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
-
+  const [hiddenAds, setHiddenAds] = useState({});
+  const handleCloseAd = (index) => {
+    setHiddenAds((prev) => ({ ...prev, [index]: true }));
+  };
+  
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -41,27 +45,22 @@ const LatestNews = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         
-        // Set canvas dimensions to match the image
         canvas.width = img.width;
         canvas.height = img.height;
         
-        // Draw the original image
         ctx.drawImage(img, 0, 0);
         
-        // Add watermark text
         ctx.font = `${img.width / 20}px Arial`;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         
-        // Rotate the canvas for diagonal watermark
         ctx.save();
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(-Math.PI / 6); // Rotate by -30 degrees
-        ctx.fillText("YourSite.com", 0, 0);
+        ctx.fillText("World One", 0, 0);
         ctx.restore();
         
-        // Convert to data URL
         const watermarkedImage = canvas.toDataURL("image/jpeg");
         setLoadedImages(prev => ({
           ...prev,
@@ -72,7 +71,7 @@ const LatestNews = () => {
       
       img.onerror = () => {
         console.error("Error loading image for watermarking");
-        resolve(imageSrc); // Fall back to original image
+        resolve(imageSrc); 
       };
       
       img.src = imageSrc;
@@ -80,7 +79,6 @@ const LatestNews = () => {
   };
 
   useEffect(() => {
-    // Process only news images
     news.forEach((article) => {
       if (article.image && !loadedImages[`news-${article.id}`]) {
         addWatermark(article.image, article.id);
@@ -144,9 +142,15 @@ const LatestNews = () => {
                 </button>
               )}
 
-              {/* Add dynamically fetched poster every 2 news articles */}
-              {index % 2 === 1 && ads.length > 0 && (
-                <div className="my-6 w-full flex justify-center">
+              {index % 2 === 1 && ads.length > 0 && !hiddenAds[index] && (
+                <div className="my-6 w-full relative flex justify-center">
+                  <button
+                    onClick={() => handleCloseAd(index)}
+                    className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center z-10"
+                    aria-label="Close ad"
+                  >
+                    ✕
+                  </button>
                   <img
                     src={ads[index % ads.length]?.image}
                     alt={ads[index % ads.length]?.title || "Advertisement"}
@@ -154,6 +158,7 @@ const LatestNews = () => {
                   />
                 </div>
               )}
+
             </div>
           );
         })}
