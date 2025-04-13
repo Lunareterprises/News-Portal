@@ -6,7 +6,7 @@ const AdsComponent = () => {
   const [ads, setAds] = useState([]);
   const [visibleAds, setVisibleAds] = useState({});
 
-  const base_url = "https://lunarsenterprises.com:8000/";
+ 
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -47,7 +47,7 @@ const AdsComponent = () => {
                 className="relative flex-shrink-0  w-full   h-72 bg-gray-800  overflow-hidden"
               >
                 <img
-                  src={base_url + ad.ads_image}
+                 src={`${process.env.NEXT_PUBLIC_API_URL}/${ad.ads_image}`}
                   
                   alt={ad.ads_name}
                   className="w-full h-full object-cover "

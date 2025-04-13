@@ -26,13 +26,12 @@ const LatestNews = () => {
         console.error("Error fetching news:", error);
       }
     };
-
     const fetchAds = async () => {
       try {
         const response = await ads_news();
         const data = response.data.map((ad) => ({
           ...ad,
-          fullImageUrl: base_url + ad.ads_image.trim(), // Trim to avoid extra spaces
+          fullImageUrl:`${process.env.NEXT_PUBLIC_API_URL}/${ad.ads_image}`.trim(), // Trim to avoid extra spaces
         }));
         setAds(data);
       } catch (error) {
