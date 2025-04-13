@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { contact } from "./contactService";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
@@ -11,7 +13,7 @@ const validationSchema = Yup.object({
     .matches(/^[0-9]+$/, "Only numbers allowed")
     .min(10, "Must be at least 10 digits")
     .required("Phone number is required"),
-  message: Yup.string().required("Message is required"),
+ 
   agree: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
 });
 
@@ -49,7 +51,7 @@ const ContactModal = ({ isOpen, onClose }) => {
               We love to hear from you. Please fill out this form.
             </p>
           </div>
-          
+
           {/* Success Message */}
           <div className="overflow-auto scrollbar-hide">
             {isSubmitted ? (
@@ -67,15 +69,51 @@ const ContactModal = ({ isOpen, onClose }) => {
                   agree: false,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  console.log("Form Data:", values);
-                  setSubmitting(false);
-                  setIsSubmitted(true);
-                  setTimeout(() => {
-                    setIsSubmitted(false);
-                    onClose();
-                  }, 3000);
+                onSubmit={async (values, { setSubmitting, resetForm }) => {
+                  try {
+                    const data = {
+                      email: values.email,
+                      name: `${values.firstName} ${values.lastName}`,
+                      mobile: values.phone,
+                      message: values.message,
+                    };
+                    const response = await contact(data);
+                
+                    if (response.result === true) {
+                      setIsSubmitted(true);
+                      resetForm();
+                      Swal.fire({
+                        icon: "success",
+                        title: "Message Sent!",
+                        text: response.message,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                      });
+                
+                      setTimeout(() => {
+                        setIsSubmitted(false);
+                        onClose();
+                      }, 3000);
+                    } else {
+                      Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.message || "Something went wrong. Please try again.",
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Submission error:", error);
+                    Swal.fire({
+                      icon: "error",
+                      title: "Server Error",
+                      text: "Something went wrong. Please try again later.",
+                    });
+                  } finally {
+                    setSubmitting(false);
+                  }
                 }}
+                
               >
                 {({ isValid, isSubmitting }) => (
                   <Form className="flex flex-col gap-4 mt-6">

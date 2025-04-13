@@ -1,16 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ads_news } from "./Ads_service";
 
 const AdsComponent = () => {
   const [ads, setAds] = useState([]);
   const [visibleAds, setVisibleAds] = useState({});
 
+  const base_url = "https://lunarsenterprises.com:8000/";
+
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const response = await fetch("/data/ads.json");
-        if (!response.ok) throw new Error("Failed to load ads");
-        const data = await response.json();
+        const response = await ads_news();
+        const data = response.data;
         setAds(data);
 
         // Initialize visibility state
@@ -31,6 +33,9 @@ const AdsComponent = () => {
     setVisibleAds((prev) => ({ ...prev, [id]: false }));
   };
 
+
+
+
   return (
     <div className="w-full overflow-hidden mb-3">
       <div className="relative flex whitespace-nowrap ">
@@ -42,8 +47,9 @@ const AdsComponent = () => {
                 className="relative flex-shrink-0  w-full   h-72 bg-gray-800  overflow-hidden"
               >
                 <img
-                  src={ad.image}
-                  alt={ad.title}
+                  src={base_url + ad.ads_image}
+                  
+                  alt={ad.ads_name}
                   className="w-full h-full object-cover "
                 />
                 <button

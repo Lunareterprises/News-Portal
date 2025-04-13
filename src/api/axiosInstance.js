@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const processENV = import.meta.env.VITE_BASE_URL;
-console.log("processEnv===>", processENV);
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log("apiUrl---->>", apiUrl);
 
 const axiosInstance = axios.create({
-  baseURL: processENV,
+  baseURL: apiUrl,
 });
 
 axiosInstance.interceptors.request.use(
@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('token'); 
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;  // Corrected this line
     }
 
     console.log("request was sent", config);

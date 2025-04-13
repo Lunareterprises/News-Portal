@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
+import { ourteam } from "./ourTeam_services";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -32,22 +33,18 @@ function OurTeamCarousel() {
   const [teamMembers, setTeamMembers] = useState([]);
 
   useEffect(() => {
-   
-      const fetchteam = async () => {
-        try {
-          const response = await axios.get(
-            "https://lunarsenterprises.com:8000/worldone/admin/team"
-          );
-          const data = response.data.data;
-          setTeamMembers(data);
-        } catch (error) {
-          console.error("Error fetching news:", error);
-        }
-      };
+    const fetchteam = async () => {
+      try {
+        const response = await ourteam();
+        const data = response.data;
+        setTeamMembers(data);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
 
-      fetchteam();
-    }, []);
-
+    fetchteam();
+  }, []);
 
   const settings = {
     dots: true,

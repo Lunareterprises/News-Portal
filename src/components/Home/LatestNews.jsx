@@ -1,17 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ads_news } from "./Ads_service";
 
 const LatestNews = () => {
   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
+
   const [hiddenAds, setHiddenAds] = useState({});
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
   };
-  
+
+  const base_url = "https://lunarsenterprises.com:8000/";
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -25,8 +29,11 @@ const LatestNews = () => {
 
     const fetchAds = async () => {
       try {
-        const response = await fetch("/data/ads.json");
-        const data = await response.json();
+        const response = await ads_news();
+        const data = response.data.map((ad) => ({
+          ...ad,
+          fullImageUrl: base_url + ad.ads_image.trim(), // Trim to avoid extra spaces
+        }));
         setAds(data);
       } catch (error) {
         console.error("Error fetching ads:", error);
@@ -44,36 +51,36 @@ const LatestNews = () => {
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-        
+
         canvas.width = img.width;
         canvas.height = img.height;
-        
+
         ctx.drawImage(img, 0, 0);
-        
+
         ctx.font = `${img.width / 20}px Arial`;
         ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        
+
         ctx.save();
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(-Math.PI / 6); // Rotate by -30 degrees
         ctx.fillText("World One", 0, 0);
         ctx.restore();
-        
+
         const watermarkedImage = canvas.toDataURL("image/jpeg");
-        setLoadedImages(prev => ({
+        setLoadedImages((prev) => ({
           ...prev,
-          [`news-${id}`]: watermarkedImage
+          [`news-${id}`]: watermarkedImage,
         }));
         resolve(watermarkedImage);
       };
-      
+
       img.onerror = () => {
         console.error("Error loading image for watermarking");
-        resolve(imageSrc); 
+        resolve(imageSrc);
       };
-      
+
       img.src = imageSrc;
     });
   };
@@ -152,13 +159,12 @@ const LatestNews = () => {
                     ✕
                   </button>
                   <img
-                    src={ads[index % ads.length]?.image}
-                    alt={ads[index % ads.length]?.title || "Advertisement"}
+                    src={ads[index % ads.length]?.fullImageUrl}
+                    alt={ads[index % ads.length]?.ads_name || "Advertisement"}
                     className="w-full"
                   />
                 </div>
               )}
-
             </div>
           );
         })}
