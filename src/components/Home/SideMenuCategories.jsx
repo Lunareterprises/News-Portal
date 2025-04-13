@@ -1,5 +1,6 @@
 "use client";
 
+import { listCategory } from "@/services/newsService";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -22,9 +23,9 @@ const SideMenuCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/data/categories.json");
-        const data = await response.json();
-        setCategories(data);
+        const response = await listCategory();
+        console.log("response==>>",response.data)
+        setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -175,7 +176,8 @@ const SideMenuCategories = () => {
 
 
           {/* Dynamic Categories */}
-          {categories.map((category) => (
+          {Array.isArray(categories) &&
+            categories.map((category) => (
             <li
               key={category.id}
               className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
@@ -184,7 +186,7 @@ const SideMenuCategories = () => {
               onClick={() => setSelectedCategory(category.name)}
             >
               <Image
-                src={category.image}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${category.image}`}
                 width={32}
                 height={32}
                 alt={category.name}
@@ -284,7 +286,8 @@ const SideMenuCategories = () => {
 
 
       {/* Other Categories */}
-      {categories.map((category) => (
+      {Array.isArray(categories) &&
+        categories.map((category) => (
         <button
           key={category.id}
           className={`px-4 py-2 rounded ${

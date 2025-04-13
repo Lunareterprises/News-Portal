@@ -1,5 +1,6 @@
 "use client";
 
+import { getads, listNews } from "@/services/newsService";
 import { useEffect, useState } from "react";
 
 const LatestNews = () => {
@@ -15,18 +16,25 @@ const LatestNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch("/data/news.json");
-        const data = await response.json();
-        setNews(data);
+        const response = await listNews();
+        const data = response.data;
+        // Filter news for "latest-news" or "both"
+        const filteredNews = data?.data?.filter(
+          (article) =>
+            article.displayOn === "latest-news" || article.displayOn === "both"
+        );
+    
+        setNews(filteredNews);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
     };
+    
 
     const fetchAds = async () => {
       try {
-        const response = await fetch("/data/ads.json");
-        const data = await response.json();
+        const response = await getads();
+        const data = response.data;
         setAds(data);
       } catch (error) {
         console.error("Error fetching ads:", error);
@@ -79,12 +87,15 @@ const LatestNews = () => {
   };
 
   useEffect(() => {
-    news.forEach((article) => {
-      if (article.image && !loadedImages[`news-${article.id}`]) {
-        addWatermark(article.image, article.id);
-      }
-    });
+    if (Array.isArray(news)) {
+      news.forEach((article) => {
+        if (article.image && !loadedImages[`news-${article.id}`]) {
+          addWatermark(article.image, article.id);
+        }
+      });
+    }
   }, [news]);
+  
 
   const toggleReadMore = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -97,7 +108,7 @@ const LatestNews = () => {
       </h2>
 
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
-        {news.map((article, index) => {
+      {Array.isArray(news) && news.map((article, index) => {
           const isExpanded = expanded[article.id];
           const shortText = article.description.substring(0, 250);
           const fadedText = article.description.substring(250, 550);
