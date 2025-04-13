@@ -39,7 +39,7 @@ const TrendingNews = () => {
         
         // Add watermark text
         ctx.font = `${img.width / 20}px Arial`;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         
@@ -47,7 +47,7 @@ const TrendingNews = () => {
         ctx.save();
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(-Math.PI / 6); // Rotate by -30 degrees
-        ctx.fillText("YourSite.com", 0, 0);
+        ctx.fillText("World One", 0, 0);
         ctx.restore();
         
         // Convert to data URL
@@ -82,7 +82,7 @@ const TrendingNews = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
+    <div className="w-full max-w-3xl mx-auto h-screen overflow-auto scrollbar-hide  mb-10">
       
       <AdsComponent />
 
@@ -90,7 +90,7 @@ const TrendingNews = () => {
         <Carousel_component />
       </div>
 
-      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block">
+      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block z-10">
         Trending & Breaking News
       </h2>
 

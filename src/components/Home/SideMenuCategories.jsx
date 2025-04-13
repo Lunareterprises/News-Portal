@@ -73,74 +73,105 @@ const SideMenuCategories = () => {
 
 
           {/* News Dropdown */}
-        <li className="flex flex-col text-sm px-6 py-2">
-          <div
-            className="flex justify-between w-full items-center cursor-pointer"
-            onClick={() => setIsNewsOpen(!isNewsOpen)}
-          >
-            <div className="flex w-full items-center gap-3">
-              <Image
-                width={32}
-                height={32}
-                src="/images/categories/images14.png"
-                alt="News"
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <span>News</span>
+          <li className="flex flex-col text-sm px-6 py-2">
+            <div
+              className={`flex justify-between w-full items-center cursor-pointer rounded  ${
+                ["Kerala News", "India News", "World News"].includes(selectedCategory)
+                  ? "bg-[#2872AF] text-white"
+                  : ""
+              }`}
+              onClick={() => setIsNewsOpen(!isNewsOpen)}
+            >
+              <div className="flex w-full items-center gap-3">
+                <Image
+                  width={32}
+                  height={32}
+                  src="/images/categories/images14.png"
+                  alt="News"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <span>
+                  {["Kerala News", "India News", "World News"].includes(selectedCategory)
+                    ? selectedCategory
+                    : "News"}
+                </span>
+              </div>
+              <span className="text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
             </div>
-            <span className="text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
-          </div>
-          {isNewsOpen && (
-            <ul className="pl-10 space-y-2 mt-2">
-              {["Kerala", "India", "World News"].map((item) => (
-                <li
-                  key={item}
-                  className={`cursor-pointer py-1 px-2  ${
-                    selectedCategory === item ? "bg-[#2872AF] text-white" : "hover:text-blue-500"
-                  }`}
-                  onClick={() => setSelectedCategory(item)}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
+
+            {isNewsOpen && (
+              <ul className="pl-10 space-y-2 mt-2">
+                {["Kerala News", "India News", "World News"].map((item) => (
+                  <li
+                    key={item}
+                    className={`cursor-pointer py-1 px-2 rounded ${
+                      selectedCategory === item
+                        ? "bg-[#2872AF] text-white"
+                        : "hover:text-[#2872AF]"
+                    }`}
+                    onClick={() => {
+                      setSelectedCategory(item);
+                      setIsNewsOpen(false);
+                    }}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+
+
+
 
         {/* District News Dropdown */}
         <li className="flex flex-col text-sm px-6 py-2">
-          <div
-            className="flex justify-between w-full items-center cursor-pointer"
-            onClick={() => setIsDistrictOpen(!isDistrictOpen)}
-          >
-            <div className="flex w-full items-center gap-3">
-              <Image
-                width={32}
-                height={32}
-                src="/images/categories/images15.png"
-                alt="District News"
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <span>District News</span>
+            <div
+              className={`flex justify-between w-full items-center cursor-pointer rounded  ${
+                districtsInKerala.includes(selectedCategory)
+                  ? "bg-[#2872AF] text-white"
+                  : ""
+              }`}
+              onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+            >
+              <div className="flex w-full items-center gap-3">
+                <Image
+                  width={32}
+                  height={32}
+                  src="/images/categories/images15.png"
+                  alt="District News"
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <span>
+                  {districtsInKerala.includes(selectedCategory)
+                    ? selectedCategory
+                    : "District News"}
+                </span>
+              </div>
+              <span className="text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
             </div>
-            <span className="text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
-          </div>
-          {isDistrictOpen && (
-            <ul className="pl-10 space-y-2 mt-2">
-              {districtsInKerala.map((district) => (
-                <li
-                  key={district}
-                  className={`cursor-pointer py-1 px-2  ${
-                    selectedCategory === district ? "bg-[#2872AF] text-white" : "hover:text-blue-500"
-                  }`}
-                  onClick={() => setSelectedCategory(district)}
-                >
-                  {district}
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
+
+            {isDistrictOpen && (
+              <ul className="pl-10 space-y-2 mt-2">
+                {districtsInKerala.map((district) => (
+                  <li
+                    key={district}
+                    className={`cursor-pointer py-1 px-2 rounded ${
+                      selectedCategory === district
+                        ? "bg-[#2872AF] text-white"
+                        : "hover:text-[#2872AF]"
+                    }`}
+                    onClick={() => {
+                      setSelectedCategory(district);
+                      setIsDistrictOpen(false);
+                    }}
+                  >
+                    {district}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
 
 
           {/* Dynamic Categories */}
@@ -268,22 +299,6 @@ const SideMenuCategories = () => {
       ))}
 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </>
   );
 };
