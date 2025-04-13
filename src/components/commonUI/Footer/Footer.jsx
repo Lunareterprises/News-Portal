@@ -8,6 +8,8 @@ const footerLinks = [
   { title: 'Main Dishes', link: '/' },
 ];
 
+
+
 const Footer = () => (
   <footer className="text-white bg-[#1F1F1F] mt-28 w-full py-10">
     <div className="mx-auto px-4 lg:px-32 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
