@@ -13,7 +13,7 @@ export const listCategory = async () => {
       throw error // rethrow to be caught in handleSubmit
     }
 }
-export const listNewsByCategory = async (data) => {
+export const listNewsByCategory = async (data) => {    
   try {
       const response = await axiosInstance.post(API_ENDPOINTS.LIST_ARTICLE,data)
       console.log("Success response:", response.data)

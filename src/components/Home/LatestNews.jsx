@@ -4,6 +4,7 @@ import { getads, listNews } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
+// const LatestNews = ({news}) => {
 const LatestNews = () => {
   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
