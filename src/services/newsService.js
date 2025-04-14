@@ -13,6 +13,16 @@ export const listCategory = async () => {
       throw error // rethrow to be caught in handleSubmit
     }
 }
+export const listNewsByCategory = async (data) => {
+  try {
+      const response = await axiosInstance.post(API_ENDPOINTS.LIST_ARTICLE,data)
+      console.log("Success response:", response.data)
+      return response.data
+    } catch (error) {
+      console.error("Error in addCategory:", error.response?.data || error.message)
+      throw error // rethrow to be caught in handleSubmit
+    }
+}
 export const listNews = async () => {
   try {
       const response = await axiosInstance.get(API_ENDPOINTS.LIST_ARTICLE)
