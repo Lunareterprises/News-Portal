@@ -3,7 +3,7 @@ import WhatsappWidget from './WhatsappWidget'
 
 function HeaderAdd() {
   return (
-    <div className='bg-[#02082c] flex flex-col md:flex-row justify-around px-4 py-4 mb-3 gap-4 items-center md:sticky top-24 z-20'>
+    <div className='bg-[#02082c] flex flex-col md:flex-row justify-around px-4 py-4 mb-3 gap-4 items-center lg:sticky top-24 z-20'>
       <div className='text-white flex flex-col justify-center items-center w-full md:w-1/4'>
         <p className='font-normal text-sm'>Run Your</p>
         <h3 className='font-bold text-xl'>ADS</h3>
