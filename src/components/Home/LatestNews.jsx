@@ -4,13 +4,13 @@ import { getads, listNews } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
-// const LatestNews = ({ news }) => {
-  const LatestNews = () => {
+const LatestNews = () => {
   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [hiddenAds, setHiddenAds] = useState({});
+  const [newsError, setNewsError] = useState(null);  // Track news fetch errors
 
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
@@ -20,24 +20,32 @@ import DOMPurify from "dompurify";
     const fetchNews = async () => {
       try {
         const response = await listNews();
-        const data = response.data;
-        const filteredNews = data?.filter(
-          (article) =>
-            article.displayOn === "latest-news" || article.displayOn === "both"
-        );
-        setNews(filteredNews);
+        if (response?.data) {
+          const filteredNews = response.data.filter(
+            (article) =>
+              article.displayOn === "latest-news" || article.displayOn === "both"
+          );
+          setNews(filteredNews);
+        } else {
+          throw new Error("News data is empty or malformed");
+        }
       } catch (error) {
         console.error("Error fetching news:", error);
+        setNewsError("Failed to load news. Please try again later.");
       }
     };
 
     const fetchAds = async () => {
       try {
         const response = await getads();
-        const data = response.data;
-        setAds(data);
+        if (response?.data) {
+          setAds(response.data);
+        } else {
+          throw new Error("Ads data is empty or malformed");
+        }
       } catch (error) {
         console.error("Error fetching ads:", error);
+        setNewsError("Failed to load ads. Please try again later.");
       }
     };
 
@@ -78,7 +86,7 @@ import DOMPurify from "dompurify";
 
       img.onerror = () => {
         console.error("Error loading image for watermarking");
-        resolve(imageSrc);
+        resolve(imageSrc); // Fallback to the original image
       };
 
       img.src = imageSrc;
@@ -117,8 +125,8 @@ import DOMPurify from "dompurify";
     if (index === -1) return "";
 
     const cleanedHtml = DOMPurify.sanitize(tempDiv.innerHTML, {
-      ALLOWED_ATTR: ['style', 'class', 'id'], // Allow inline styles and classes
-      ALLOWED_TAGS: ['*', 'b', 'i', 'u', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em'], // Allow all tags
+      ALLOWED_ATTR: ['style', 'class', 'id'],
+      ALLOWED_TAGS: ['*', 'b', 'i', 'u', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em'],
     });
 
     const span = document.createElement("span");
@@ -126,12 +134,18 @@ import DOMPurify from "dompurify";
     return span.innerHTML;
   };
 
+ 
+
   return (
     <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
       <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block">
         Latest News
       </h2>
-
+      {newsError && (
+        <div className="text-red-600 bg-red-100 p-4 my-4 rounded">
+          {newsError}
+        </div>
+      )}
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
         {Array.isArray(news) &&
           news.map((article, index) => {
@@ -150,17 +164,13 @@ import DOMPurify from "dompurify";
               <div key={article.id} className="mb-6 relative">
                 <div className="relative">
                   <img
-                    src={
-                      loadedImages[imageKey] ||
-                      `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`
-                    }
+                    src={loadedImages[imageKey] || `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`}
                     alt={article.title}
                     className="w-full h-56 object-cover"
+                    onError={(e) => e.target.src = '/path/to/fallback-image.jpg'} // Error fallback image
                   />
                 </div>
-                <h3 className="text-xl font-semibold mt-3">
-                  {article.heading}
-                </h3>
+                <h3 className="text-xl font-semibold mt-3">{article.heading}</h3>
 
                 <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
                   {!isExpanded ? (
@@ -198,28 +208,22 @@ import DOMPurify from "dompurify";
                   </button>
                 )}
 
-
-                {index % 2 === 1 &&
-                  ads.length > 0 &&
-                  !hiddenAds[index] && (
-                    <div className="my-6 w-full relative flex justify-center">
-                      <button
-                        onClick={() => handleCloseAd(index)}
-                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center z-10"
-                        aria-label="Close ad"
-                      >
-                        ✕
-                      </button>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL}/${ads[index % ads.length]?.ads_image}`}
-                        alt={
-                          ads[index % ads.length]?.ads_name ||
-                          "Advertisement"
-                        }
-                        className="w-full"
-                      />
-                    </div>
-                  )}
+                {index % 2 === 1 && ads.length > 0 && !hiddenAds[index] && (
+                  <div className="my-6 w-full relative flex justify-center">
+                    <button
+                      onClick={() => handleCloseAd(index)}
+                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center z-10"
+                      aria-label="Close ad"
+                    >
+                      ✕
+                    </button>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${ads[index % ads.length]?.ads_image}`}
+                      alt={ads[index % ads.length]?.ads_name || "Advertisement"}
+                      className="w-full"
+                    />
+                  </div>
+                )}
               </div>
             );
           })}
