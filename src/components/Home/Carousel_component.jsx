@@ -2,7 +2,8 @@
 import { getBanner } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { banner } from "./carousel_Service";
 
 function Carousel_component() {
     const [news, setNews] = useState([]);
@@ -22,15 +23,15 @@ function Carousel_component() {
     }, []);
   return (
     <div>
-        {news.length > 0 && (
+      {news?.length > 0 && (
         <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showIndicators={false}
-            showArrows={false}
-            className="mb-4"
+          autoPlay
+          infiniteLoop
+          showThumbs={false}
+          showStatus={false}
+          showIndicators={false}
+          showArrows={false}
+          className="mb-4"
         >
             {news.slice(0, 5).map((article) => (
             <div key={article.b_id}>
@@ -44,11 +45,11 @@ function Carousel_component() {
                 {article.b_name}
                 </p>
             </div>
-            ))}
+          ))}
         </Carousel>
-        )}
+      )}
     </div>
-  )
+  );
 }
 
-export default Carousel_component
+export default Carousel_component;

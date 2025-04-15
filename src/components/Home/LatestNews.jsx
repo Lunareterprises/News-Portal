@@ -10,6 +10,7 @@ const LatestNews = () => {
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
+
   const [hiddenAds, setHiddenAds] = useState({});
   const [newsError, setNewsError] = useState(null);  // Track news fetch errors
 
@@ -35,7 +36,6 @@ const LatestNews = () => {
         setNewsError("Failed to load news. Please try again later.");
       }
     };
-
     const fetchAds = async () => {
       try {
         const response = await getads();
