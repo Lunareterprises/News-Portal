@@ -1,4 +1,5 @@
 "use client"
+import { getBanner } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
@@ -8,8 +9,9 @@ function Carousel_component() {
     useEffect(() => {
       const fetchNews = async () => {
         try {
-          const response = await fetch("/data/news.json");
-          const data = await response.json();
+          const response = await getBanner();
+          const data = response.data;
+          console.log("data-------banner---",data)
           setNews(data);
         } catch (error) {
           console.error("Error fetching news:", error);
@@ -31,15 +33,15 @@ function Carousel_component() {
             className="mb-4"
         >
             {news.slice(0, 5).map((article) => (
-            <div key={article.id}>
+            <div key={article.b_id}>
                 <img
-                src={article.image_article}
-                alt={article.title}
-                className="w-full h-48 lg:h-64 object-cover"
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${article.b_image}`}
+                alt={article.b_name}
+                className="w-full h-48 lg:h-64 object-fill"
                 />
 
-                <p className="absolute bottom-0 left-0 w-full bg-black  text-white text-sm font-semibold p-3">
-                {article.title}
+                <p className="absolute bottom-0 left-0 w-full bg-black/60  text-white text-sm font-semibold p-3">
+                {article.b_name}
                 </p>
             </div>
             ))}

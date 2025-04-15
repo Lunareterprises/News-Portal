@@ -1,30 +1,48 @@
 "use client";
 
+import { listCategory, listNews, listNewsByCategory } from "@/services/newsService";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const SideMenuCategories = () => {
+const districtsInKerala = [
+  { id: "THIRUVANANTHAPURAM", name: "Thiruvananthapuram" },
+  { id: "KOLLAM", name: "Kollam" },
+  { id: "PATHANAMTHITTA", name: "Pathanamthitta" },
+  { id: "ALAPPUZHA", name: "Alappuzha" },
+  { id: "KOTTAYAM", name: "Kottayam" },
+  { id: "IDUKKI", name: "Idukki" },
+  { id: "ERNAKULAM", name: "Ernakulam" },
+  { id: "THRISSUR", name: "Thrissur" },
+  { id: "PALAKKAD", name: "Palakkad" },
+  { id: "MALAPPURAM", name: "Malappuram" },
+  { id: "KOZHIKODE", name: "Kozhikode" },
+  { id: "WAYANAD", name: "Wayanad" },
+  { id: "KANNUR", name: "Kannur" },
+  { id: "KASARAGOD", name: "Kasaragod" },
+];
+
+const newsFrom = [
+  { id: "KERALA_NEWS", name: "Kerala News" },
+  { id: "INDIA_NEWS", name: "India News" },
+  { id: "WORLD_NEWS", name: "World News" },
+];
+
+const SideMenuCategories = ({onCategorySelect}) => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Latest News");
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: "LATEST",
+    name: "Latest News",
+  });
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [isDistrictOpen, setIsDistrictOpen] = useState(false);
   const scrollContainerRef = useRef(null);
 
-  const districtsInKerala = [
-    "Thiruvananthapuram", "Kollam", "Pathanamthitta", "Alappuzha",
-    "Kottayam", "Idukki", "Ernakulam", "Thrissur", "Palakkad",
-    "Malappuram", "Kozhikode", "Wayanad", "Kannur", "Kasaragod",
-  ];
-
-  const newsFrom = ["Kerala News", "India News", "World News"]
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/data/categories.json");
-        const data = await response.json();
-        setCategories(data);
+        const response = await listCategory();
+        setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -33,7 +51,6 @@ const SideMenuCategories = () => {
     fetchCategories();
   }, []);
 
-  // Check if content overflows
   useEffect(() => {
     const checkOverflow = () => {
       if (scrollContainerRef.current) {
@@ -48,18 +65,38 @@ const SideMenuCategories = () => {
     return () => window.removeEventListener("resize", checkOverflow);
   }, [categories]);
 
-  console.log("selectedCategory : ",selectedCategory)
+  const isSelected = (item) => selectedCategory?.name === item.name;
+
+  // Function to handle category selection and trigger the backend call
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    onCategorySelect(category.id); // Passing category id to parent component
+  };
+
+  // // Example backend call with category ID
+  // const fetchCategoryData = async (categoryId) => {
+  //   try {
+  //     const response = await listNewsByCategory({ categoryId: categoryId });
+  //     const data = response.data;
+  //     console.log("Fetched data:", data);
+  //   } catch (error) {
+  //     console.error("Error fetching data for category:", categoryId, error);
+  //   }
+  // };
+
   return (
     <>
-      {/* Sidebar for large screens */}
-      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block  ">
+      {/* Sidebar */}
+      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block">
         <ul className="space-y-2 overflow-y-auto max-h-[calc(100vh)] scrollbar-hide scroll-smooth">
           {/* Latest News */}
           <li
             className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
-              selectedCategory === "Latest News" ? "bg-[#2872AF] text-white" : "hover:text-blue-500"
+              selectedCategory.name === "Latest News"
+                ? "bg-[#2872AF] text-white"
+                : "hover:text-blue-500"
             }`}
-            onClick={() => setSelectedCategory("Latest News")}
+            onClick={() => handleCategorySelect({ id: "LATEST", name: "Latest News" })}
           >
             <Image
               width={32}
@@ -71,14 +108,11 @@ const SideMenuCategories = () => {
             <span>Latest News</span>
           </li>
 
-
           {/* News Dropdown */}
-          <li className="flex flex-col text-sm px-6 py-2">
+          <li className="flex flex-col text-sm">
             <div
-              className={`flex justify-between w-full items-center cursor-pointer rounded  ${
-                ["Kerala News", "India News", "World News"].includes(selectedCategory)
-                  ? "bg-[#2872AF] text-white"
-                  : ""
+              className={`flex justify-between w-full px-6 py-2 items-center cursor-pointer ${
+                newsFrom.some((item) => isSelected(item)) ? "bg-[#2872AF] text-white" : ""
               }`}
               onClick={() => setIsNewsOpen(!isNewsOpen)}
             >
@@ -91,46 +125,33 @@ const SideMenuCategories = () => {
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <span>
-                  {["Kerala News", "India News", "World News"].includes(selectedCategory)
-                    ? selectedCategory
-                    : "News"}
+                  {newsFrom.some((item) => isSelected(item)) ? selectedCategory.name : "News"}
                 </span>
               </div>
               <span className="text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
             </div>
-
             {isNewsOpen && (
               <ul className="pl-10 space-y-2 mt-2">
-                {["Kerala News", "India News", "World News"].map((item) => (
+                {newsFrom.map((item) => (
                   <li
-                    key={item}
-                    className={`cursor-pointer py-1 px-2 rounded ${
-                      selectedCategory === item
-                        ? "bg-[#2872AF] text-white"
-                        : "hover:text-[#2872AF]"
+                    key={item.id}
+                    className={`cursor-pointer py-1 px-2 ${
+                      isSelected(item) ? "bg-[#2872AF] text-white" : "hover:text-[#2872AF]"
                     }`}
-                    onClick={() => {
-                      setSelectedCategory(item);
-                      setIsNewsOpen(false);
-                    }}
+                    onClick={() => handleCategorySelect(item)}
                   >
-                    {item}
+                    {item.name}
                   </li>
                 ))}
               </ul>
             )}
           </li>
 
-
-
-
-        {/* District News Dropdown */}
-        <li className="flex flex-col text-sm px-6 py-2">
+          {/* District Dropdown */}
+          <li className="flex flex-col text-sm">
             <div
-              className={`flex justify-between w-full items-center cursor-pointer rounded  ${
-                districtsInKerala.includes(selectedCategory)
-                  ? "bg-[#2872AF] text-white"
-                  : ""
+              className={`flex justify-between w-full items-center cursor-pointer px-6 py-2 ${
+                districtsInKerala.some((item) => isSelected(item)) ? "bg-[#2872AF] text-white" : ""
               }`}
               onClick={() => setIsDistrictOpen(!isDistrictOpen)}
             >
@@ -143,48 +164,43 @@ const SideMenuCategories = () => {
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <span>
-                  {districtsInKerala.includes(selectedCategory)
-                    ? selectedCategory
+                  {districtsInKerala.some((item) => isSelected(item))
+                    ? selectedCategory.name
                     : "District News"}
                 </span>
               </div>
               <span className="text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
             </div>
-
             {isDistrictOpen && (
               <ul className="pl-10 space-y-2 mt-2">
-                {districtsInKerala.map((district) => (
+                {districtsInKerala.map((item) => (
                   <li
-                    key={district}
-                    className={`cursor-pointer py-1 px-2 rounded ${
-                      selectedCategory === district
-                        ? "bg-[#2872AF] text-white"
-                        : "hover:text-[#2872AF]"
+                    key={item.id}
+                    className={`cursor-pointer py-1 px-2 ${
+                      isSelected(item) ? "bg-[#2872AF] text-white" : "hover:text-[#2872AF]"
                     }`}
-                    onClick={() => {
-                      setSelectedCategory(district);
-                      setIsDistrictOpen(false);
-                    }}
+                    onClick={() => handleCategorySelect(item)}
                   >
-                    {district}
+                    {item.name}
                   </li>
                 ))}
               </ul>
             )}
           </li>
 
-
           {/* Dynamic Categories */}
           {categories.map((category) => (
             <li
               key={category.id}
               className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
-                selectedCategory === category.name ? "bg-[#2872AF] text-white" : "hover:text-blue-500"
+                selectedCategory.name === category.name
+                  ? "bg-[#2872AF] text-white"
+                  : "hover:text-blue-500"
               }`}
-              onClick={() => setSelectedCategory(category.name)}
+              onClick={() => handleCategorySelect({ id: category.id, name: category.name })}
             >
               <Image
-                src={category.image}
+                src={`${process.env.NEXT_PUBLIC_API_URL}/${category.image}`}
                 width={32}
                 height={32}
                 alt={category.name}
@@ -196,109 +212,106 @@ const SideMenuCategories = () => {
         </ul>
       </div>
 
-      
-      {/* Horizontal Scrollable Navbar for Mobile */}
-      
+      {/* Mobile Scrollable Menu */}
       <div
-      ref={scrollContainerRef}
-      className="tracking-wide lg:hidden w-full flex items-center overflow-x-scroll h-10 overflow-y-hidden relative text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
-    >
-      {/* Latest News */}
-      <button
-        className={`px-4 py-2 whitespace-nowrap ${
-          selectedCategory === "Latest News"
-            ? "text-[#2872AF] font-semibold"
-            : "bg-gray-100"
-        }`}
-        onClick={() => setSelectedCategory("Latest News")}
+        ref={scrollContainerRef}
+        className="tracking-wide lg:hidden w-full flex items-center overflow-x-scroll h-10 overflow-y-hidden relative text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
       >
-        {selectedCategory === "Latest News" ? "Latest News" : "Latest News"}
-      </button>
-
-      {/* News Dropdown */}
-
-      <div className="relative inline-flex dropdown-menu">
+        {/* Latest News */}
         <button
-          className={`px-4 py-2 flex items-center whitespace-nowrap ${
-            newsFrom.includes(selectedCategory) ? "text-[#2872AF] font-semibold" : "bg-gray-100"
-          }`}
-          onClick={() => setIsNewsOpen(!isNewsOpen)}
-        >
-          {newsFrom.includes(selectedCategory) ? selectedCategory : "News"}
-          <span className="ml-2 text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
-        </button>
-        {isNewsOpen && (
-          <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
-            {newsFrom.map((district) => (
-              <li
-                key={district}
-                className={`cursor-pointer py-2 px-4 ${
-                  selectedCategory === district ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
-                }`}
-                onClick={() => {
-                  setSelectedCategory(district);
-                  setIsNewsOpen(false);
-                }}
-              >
-                {district}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* District News Dropdown */}
-      <div className="relative inline-flex dropdown-menu">
-        <button
-          className={`px-4 py-2 flex items-center whitespace-nowrap ${
-            districtsInKerala.includes(selectedCategory) ? "text-[#2872AF] font-semibold" : "bg-gray-100"
-          }`}
-          onClick={() => setIsDistrictOpen(!isDistrictOpen)}
-        >
-          {districtsInKerala.includes(selectedCategory) ? selectedCategory : "District News"}
-          <span className="ml-2 text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
-        </button>
-        {isDistrictOpen && (
-          <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
-            {districtsInKerala.map((district) => (
-              <li
-                key={district}
-                className={`cursor-pointer py-2 px-4 ${
-                  selectedCategory === district ? "text-[#2872AF] font-semibold" : "hover:bg-gray-200"
-                }`}
-                onClick={() => {
-                  setSelectedCategory(district);
-                  setIsDistrictOpen(false);
-                }}
-              >
-                {district}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-
-
-
-
-
-      {/* Other Categories */}
-      {categories.map((category) => (
-        <button
-          key={category.id}
-          className={`px-4 py-2 rounded ${
-            selectedCategory === category.name
+          className={`px-4 py-2 whitespace-nowrap ${
+            selectedCategory.name === "Latest News"
               ? "text-[#2872AF] font-semibold"
               : "bg-gray-100"
           }`}
-          onClick={() => setSelectedCategory(category.name)}
+          onClick={() => handleCategorySelect({ id: "LATEST", name: "Latest News" })}
         >
-          {selectedCategory === category.name ? ` ${category.name}` : category.name}
+          Latest News
         </button>
-      ))}
 
-    </div>
+        {/* News Dropdown */}
+        <div className="relative inline-flex dropdown-menu">
+          <button
+            className={`px-4 py-2 flex items-center whitespace-nowrap ${
+              newsFrom.some((item) => isSelected(item))
+                ? "text-[#2872AF] font-semibold"
+                : "bg-gray-100"
+            }`}
+            onClick={() => setIsNewsOpen(!isNewsOpen)}
+          >
+            {newsFrom.some((item) => isSelected(item))
+              ? selectedCategory.name
+              : "News"}
+            <span className="ml-2 text-[12px]">{isNewsOpen ? "▲" : "▼"}</span>
+          </button>
+          {isNewsOpen && (
+            <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
+              {newsFrom.map((item) => (
+                <li
+                  key={item.id}
+                  className={`cursor-pointer py-2 px-4 ${
+                    isSelected(item)
+                      ? "text-[#2872AF] font-semibold"
+                      : "hover:bg-gray-200"
+                  }`}
+                  onClick={() => handleCategorySelect(item)}
+                >
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* District Dropdown */}
+        <div className="relative inline-flex dropdown-menu">
+          <button
+            className={`px-4 py-2 flex items-center whitespace-nowrap ${
+              districtsInKerala.some((item) => isSelected(item))
+                ? "text-[#2872AF] font-semibold"
+                : "bg-gray-100"
+            }`}
+            onClick={() => setIsDistrictOpen(!isDistrictOpen)}
+          >
+            {districtsInKerala.some((item) => isSelected(item))
+              ? selectedCategory.name
+              : "District News"}
+            <span className="ml-2 text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
+          </button>
+          {isDistrictOpen && (
+            <ul className="fixed left-0 top-12 w-40 bg-white shadow-md z-50 border border-gray-200">
+              {districtsInKerala.map((item) => (
+                <li
+                  key={item.id}
+                  className={`cursor-pointer py-2 px-4 ${
+                    isSelected(item)
+                      ? "text-[#2872AF] font-semibold"
+                      : "hover:bg-gray-200"
+                  }`}
+                  onClick={() => handleCategorySelect(item)}
+                >
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Dynamic Categories */}
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            className={`px-4 py-2 whitespace-nowrap ${
+              selectedCategory.name === category.name
+                ? "text-[#2872AF] font-semibold"
+                : "bg-gray-100"
+            }`}
+            onClick={() => handleCategorySelect({ id: category.id, name: category.name })}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
     </>
   );
 };

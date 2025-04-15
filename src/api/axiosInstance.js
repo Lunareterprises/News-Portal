@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const processENV = import.meta.env.VITE_BASE_URL;
-console.log("processEnv===>", processENV);
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+console.log("apiUrl---->>",apiUrl)
 
 const axiosInstance = axios.create({
-  baseURL: processENV,
+  baseURL: apiUrl,
 });
 
 axiosInstance.interceptors.request.use(
@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("received the response", response);
+    // console.log("received the response", response);
     return response;
   },
   (error) => {
