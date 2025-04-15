@@ -30,7 +30,7 @@ const TrendingNews = () => {
             article.displayOn === "trending-news" ||
             article.displayOn === "both"
         );
-
+console.log('kfjnjbdknlsm',news);
 
         setNews(filteredNews);
         setError(null); // Clear any previous error
