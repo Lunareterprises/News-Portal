@@ -3,6 +3,7 @@ import axios from "axios";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 console.log("apiUrl---->>", apiUrl);
 
+
 const axiosInstance = axios.create({
   baseURL: apiUrl,
 });
@@ -26,7 +27,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("received the response", response);
+    // console.log("received the response", response);
     return response;
   },
   (error) => {
