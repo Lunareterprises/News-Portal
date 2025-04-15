@@ -25,7 +25,7 @@ export const listNewsByCategory = async (data) => {
 }
 export const listNews = async () => {
   try {
-      const response = await axiosInstance.get(API_ENDPOINTS.LIST_ARTICLE)
+      const response = await axiosInstance.post(API_ENDPOINTS.LIST_ARTICLE)
       console.log("Success response:", response.data)
       return response.data
     } catch (error) {

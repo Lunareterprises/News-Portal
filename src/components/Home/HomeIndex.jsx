@@ -10,12 +10,14 @@ import { listNewsByCategory } from "@/services/newsService";
 
 function HomeIndex() {
   const [news, setNews] = useState([]);
+  const [newsError, setNewsError] = useState(null);
 
   const fetchNewsForCategory = async (categoryId) => {
     try {
       const response = await listNewsByCategory({ categoryId });
-      console.log("categoryId//////.....>",categoryId);
-      setNews(response.data);  
+      console.log("categoryId//////.....>", categoryId);
+
+      setNews(response.data);
     } catch (error) {
       console.error("Error fetching news:", error);
     }
@@ -24,7 +26,7 @@ function HomeIndex() {
   // Fetch news for the default category "LATEST" when the component mounts
   useEffect(() => {
     fetchNewsForCategory("LATEST");
-  }, []);  // Empty dependency array means this runs once when the component is mounted
+  }, []); // Empty dependency array means this runs once when the component is mounted
 
   return (
     <div className="px-4  md:px-10 lg:px-20 xl:px-32">
@@ -33,7 +35,7 @@ function HomeIndex() {
       <div className="flex flex-col gap-6 lg:flex-row">
         <SideMenu onCategorySelect={fetchNewsForCategory} />
         <div className="hidden lg:flex flex-col gap-6 md:flex-row flex-1">
-          <LatestNews news={news} />
+          <LatestNews news={news} newsError={newsError} />
           <TrendingNews />
         </div>
       </div>

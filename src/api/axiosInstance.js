@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-console.log("apiUrl---->>",apiUrl)
+console.log("apiUrl---->>", apiUrl);
+
 
 const axiosInstance = axios.create({
   baseURL: apiUrl,
@@ -12,7 +13,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('token'); 
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;  // Corrected this line
     }
 
     console.log("request was sent", config);

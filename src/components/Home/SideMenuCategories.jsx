@@ -43,6 +43,9 @@ const SideMenuCategories = ({onCategorySelect}) => {
       try {
         const response = await listCategory();
         setCategories(response.data);
+
+        console.log('categoriescategories',categories);
+        
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
