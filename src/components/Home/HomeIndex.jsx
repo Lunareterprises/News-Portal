@@ -17,7 +17,6 @@ function HomeIndex() {
     try {
       setLoading(true);
       const response = await listNewsByCategory({ categoryId });
-      console.log("categoryId//////.....>", categoryId);
 
       setNews(response.data);
     } catch (error) {
@@ -44,7 +43,7 @@ function HomeIndex() {
         </div>
       </div>
       <div className="block lg:hidden">
-        <ResponsiveSmalview />
+        <ResponsiveSmalview news={news} newsError={newsError}/>
       </div>
     </div>
   );

@@ -1,8 +1,23 @@
-@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap'); */
 
+@import "tailwindcss";
+/* ✅ Always start with @import at the top */
+
+/* Your global font face (optional if using import above) */
+/* @font-face {
+  font-family: 'Nunito Sans';
+  src: url('/fonts/NunitoSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+} */
+
+/* Rest of your CSS */
 body {
-    background-color: #F5F5F5;
+  background-color: #F5F5F5;
+  /* font-family: 'Nunito Sans', sans-serif; */
 }
+
+
 
 html, body {
     /* overflow: auto; */
@@ -27,12 +42,12 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     scroll-behavior: smooth;
 }
 
-@font-face {
+/* @font-face {
     font-family: 'Nunito Sans';
     src: url('/fonts/NunitoSans-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
-}
+} */
 
 body {
     font-family: 'Nunito Sans', sans-serif;

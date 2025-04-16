@@ -1,13 +1,10 @@
 "use client";
 import { getads } from "@/services/newsService";
 import { useEffect, useState } from "react";
-import { ads_news } from "./Ads_service";
 
 const AdsComponent = () => {
   const [ads, setAds] = useState([]);
   const [visibleAds, setVisibleAds] = useState({});
-
- 
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -22,7 +19,6 @@ const AdsComponent = () => {
         }, {});
         setVisibleAds(adVisibility);
 
-        console.log("visibleAds",visibleAds)
       } catch (error) {
         console.error("Error fetching ads:", error);
       }
@@ -34,9 +30,6 @@ const AdsComponent = () => {
   const closeAd = (ads_id) => {
     setVisibleAds((prev) => ({ ...prev, [ads_id]: false }));
   };
-
-
-
 
   return (
     <div className="w-full overflow-hidden mb-3">

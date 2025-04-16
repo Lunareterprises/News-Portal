@@ -44,7 +44,6 @@ const SideMenuCategories = ({onCategorySelect}) => {
         const response = await listCategory();
         setCategories(response.data);
 
-        console.log('categoriescategories',categories);
         
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -74,6 +73,8 @@ const SideMenuCategories = ({onCategorySelect}) => {
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     onCategorySelect(category.id); // Passing category id to parent component
+    setIsNewsOpen(false);
+    setIsDistrictOpen(false);
   };
 
   // // Example backend call with category ID
