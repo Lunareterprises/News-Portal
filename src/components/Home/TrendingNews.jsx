@@ -10,15 +10,16 @@ const TrendingNews = () => {
   const [news, setNews] = useState([]);
   const [loadedImages, setLoadedImages] = useState({});
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
+        setLoading(true);
 
-
-        const dataNews={
-          categoryId:""
-        }
+        const dataNews = {
+          categoryId: "",
+        };
 
         const response = await listNews(dataNews);
         const data = response.data;
@@ -31,12 +32,13 @@ const TrendingNews = () => {
             article.displayOn === "both"
         );
 
-
         setNews(filteredNews);
         setError(null); // Clear any previous error
       } catch (err) {
         console.error("Error fetching news:", err);
         setError("Failed to load news. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -122,88 +124,103 @@ const TrendingNews = () => {
 
       {/* Show error if fetch failed */}
       {error && (
-        <div className="text-red-600 bg-red-100 p-4 my-4 rounded">
-          {error}
-        </div>
+        <div className="text-red-600 bg-red-100 p-4 my-4 rounded">{error}</div>
       )}
 
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
-       
-       
-      {Array.isArray(news) && news.length > 0 ? (
-  news.map((article) => {
-    const isExpanded = expanded[article.id];
-    const rawContent = article.content || "";
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+          </div>
+        ) : Array.isArray(news) && news.length > 0 ? (
+          news.map((article) => {
+            const isExpanded = expanded[article.id];
+            const rawContent = article.content || "";
 
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = rawContent;
-    const plainText = tempDiv.textContent || tempDiv.innerText || "";
-    const shortText = plainText.substring(0, 250);
-    const showReadMore = plainText.length > 250;
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = rawContent;
+            const plainText = tempDiv.textContent || tempDiv.innerText || "";
+            const shortText = plainText.substring(0, 250);
+            const showReadMore = plainText.length > 250;
 
-    const imageKey = `news-${article.id}`;
-    const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
+            const imageKey = `news-${article.id}`;
+            const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
 
-    return (
-      <div key={article.id} className="mb-6 relative">
-        <img
-          src={loadedImages[imageKey] || fallbackImage}
-          alt={article.heading}
-          className="w-full h-56 object-cover"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/default-news-image.jpg"; // fallback image
-            console.warn("Image failed to load:", fallbackImage);
-          }}
-        />
-        <h3 className="text-xl font-semibold mt-3">{article.heading}</h3>
+            return (
+              <div key={article.id} className="mb-6 relative">
+                <img
+                  src={loadedImages[imageKey] || fallbackImage}
+                  alt={article.heading}
+                  className="w-full h-56 object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/default-news-image.jpg"; // fallback image
+                    console.warn("Image failed to load:", fallbackImage);
+                  }}
+                />
+                <h3 className="text-xl font-semibold mt-3">
+                  {article.heading}
+                </h3>
 
-        <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
-          {!isExpanded ? (
-            <>
-              <p>{shortText}...</p>
-              {showReadMore && (
-                <div className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
+                <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
+                  {!isExpanded ? (
+                    <>
+                      <p>{shortText}...</p>
+                      {showReadMore && (
+                        <div className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
+                          <button
+                            onClick={() => toggleReadMore(article.id)}
+                            className="bg-[#2872AF] font-medium text-white px-4 py-1 cursor-pointer whitespace-nowrap"
+                          >
+                            Read More
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(rawContent, {
+                          ALLOWED_ATTR: ["style", "class", "id"],
+                          ALLOWED_TAGS: [
+                            "*",
+                            "b",
+                            "i",
+                            "u",
+                            "a",
+                            "img",
+                            "p",
+                            "h1",
+                            "h2",
+                            "h3",
+                            "h4",
+                            "h5",
+                            "h6",
+                            "strong",
+                            "em",
+                          ],
+                        }),
+                      }}
+                    />
+                  )}
+                </div>
+
+                {isExpanded && (
                   <button
                     onClick={() => toggleReadMore(article.id)}
-                    className="bg-[#2872AF] font-medium text-white px-4 py-1 cursor-pointer whitespace-nowrap"
+                    className="bg-[#ff773a] font-medium text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
                   >
-                    Read More
+                    Read Less
                   </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(rawContent, {
-                  ALLOWED_ATTR: ["style", "class", "id"],
-                  ALLOWED_TAGS: ["*", "b", "i", "u", "a", "img", "p", "h1", "h2", "h3", "h4", "h5", "h6", "strong", "em"],
-                }),
-              }}
-            />
-          )}
-        </div>
-
-        {isExpanded && (
-          <button
-            onClick={() => toggleReadMore(article.id)}
-            className="bg-[#ff773a] font-medium text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
-          >
-            Read Less
-          </button>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div className="text-center text-gray-500 py-10 text-lg">
+            No Trending News Available
+          </div>
         )}
-      </div>
-    );
-  })
-) : (
-  <div className="text-center text-gray-500 py-10 text-lg">
-    No Trending News Available
-  </div>
-)}
-
-
-
       </div>
     </div>
   );

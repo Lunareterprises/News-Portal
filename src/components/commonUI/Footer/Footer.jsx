@@ -69,8 +69,7 @@ const Footer = () => {
   const footerLinks = [
     { title: "Home", link: "/" },
     { title: "About", link: "/" },
-    { title: "Contact", link: "/" },
-    { title: "Privacy Policy", link: "/" },
+
   ];
 
   return (

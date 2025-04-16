@@ -54,3 +54,19 @@ body {
     animation: scroll 20s linear infinite;
   }
   
+
+  @keyframes shimmer {
+    0% {
+      background-position: -500px 0;
+    }
+    100% {
+      background-position: 500px 0;
+    }
+  }
+  
+  .animate-shimmer {
+    background: linear-gradient(to right, #f0f0f0 8%, #e0e0e0 18%, #f0f0f0 33%);
+    background-size: 1000px 100%;
+    animation: shimmer 1.2s infinite linear;
+  }
+  
