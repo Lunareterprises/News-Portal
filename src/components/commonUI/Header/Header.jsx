@@ -26,6 +26,7 @@ const Header = () => {
               width={120}
               height={100}
               alt="Company Logo"
+              className="h-auto w-auto"
             />
           </div>
 

@@ -41,7 +41,7 @@ function OurTeamCarousel() {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -64,7 +64,7 @@ function OurTeamCarousel() {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-52 object-cover"
+                  className="w-full h-60 object-cover"
                 />
                 <div className="p-4">
                   <h3 className="text-lg md:text-xl font-semibold">{member.name}</h3>

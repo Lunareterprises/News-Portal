@@ -6,7 +6,6 @@ import { API_ENDPOINTS } from "../api/Constants"
 export const listCategory = async () => {
   try {
       const response = await axiosInstance.get(API_ENDPOINTS.LIST_CATEGORY)
-      console.log("Success response:", response.data)
       return response.data
     } catch (error) {
       console.error("Error in addCategory:", error.response?.data || error.message)
@@ -16,7 +15,6 @@ export const listCategory = async () => {
 export const listNewsByCategory = async (data) => {    
   try {
       const response = await axiosInstance.post(API_ENDPOINTS.LIST_ARTICLE,data)
-      console.log("Success response:", response.data)
       return response.data
     } catch (error) {
       console.error("Error in addCategory:", error.response?.data || error.message)
@@ -26,7 +24,6 @@ export const listNewsByCategory = async (data) => {
 export const listNews = async () => {
   try {
       const response = await axiosInstance.post(API_ENDPOINTS.LIST_ARTICLE)
-      console.log("Success response:", response.data)
       return response.data
     } catch (error) {
       console.error("Error in addCategory:", error.response?.data || error.message)
@@ -37,7 +34,6 @@ export const listNews = async () => {
 export const getads = async () => {
   try {
       const response = await axiosInstance.get(API_ENDPOINTS.GET_ADS)
-      console.log("Success response:", response.data)
       return response.data
     } catch (error) {
       console.error("Error in addCategory:", error.response?.data || error.message)
@@ -48,7 +44,6 @@ export const getads = async () => {
 export const getBanner = async () => {
   try {
       const response = await axiosInstance.get(API_ENDPOINTS.LIST_BANNER)
-      console.log("Success response:", response.data)
       return response.data
     } catch (error) {
       console.error("Error in addCategory:", error.response?.data || error.message)

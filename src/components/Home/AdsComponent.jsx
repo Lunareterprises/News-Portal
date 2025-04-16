@@ -19,7 +19,6 @@ const AdsComponent = () => {
         }, {});
         setVisibleAds(adVisibility);
 
-        console.log("visibleAds",visibleAds)
       } catch (error) {
         console.error("Error fetching ads:", error);
       }

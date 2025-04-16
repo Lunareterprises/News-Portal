@@ -4,8 +4,8 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaEnvelope, FaPhone } from 'react-
 const footerLinks = [
   { title: 'Menu', link: '/' },
   { title: 'About Us', link: '/' },
-  { title: 'Contact Us', link: '/' },
-  { title: 'Main Dishes', link: '/' },
+  // { title: 'Contact Us', link: '/' },
+  // { title: 'Main Dishes', link: '/' },
 ];
 
 const Footer = () => (

@@ -11,7 +11,6 @@ function Carousel_component() {
         try {
           const response = await getBanner();
           const data = response.data;
-          console.log("data-------banner---",data)
           setNews(data);
         } catch (error) {
           console.error("Error fetching news:", error);

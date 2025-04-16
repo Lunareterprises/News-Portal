@@ -12,7 +12,7 @@ const validationSchema = Yup.object({
     .min(10, "Must be at least 10 digits")
     .required("Phone number is required"),
   message: Yup.string().required("Message is required"),
-  agree: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
+  // agree: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
 });
 
 const ContactModal = ({ isOpen, onClose }) => {
@@ -64,11 +64,10 @@ const ContactModal = ({ isOpen, onClose }) => {
                   email: "",
                   phone: "",
                   message: "",
-                  agree: false,
+                  // agree: false,
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                  console.log("Form Data:", values);
                   setSubmitting(false);
                   setIsSubmitted(true);
                   setTimeout(() => {
@@ -119,7 +118,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Privacy Policy Checkbox */}
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <Field type="checkbox" name="agree" className="w-4 h-4" />
                       <label className="text-sm text-gray-600">
                         You agree to our friendly{" "}
@@ -133,7 +132,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                       name="agree"
                       component="p"
                       className="text-red-500 text-xs"
-                    />
+                    /> */}
 
                     {/* Submit Button */}
                     <button

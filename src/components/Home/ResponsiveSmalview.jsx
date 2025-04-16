@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Carousel from "./Carousel_component";
 import LatestNews from "./LatestNews";
 import TrendingNews from "./TrendingNews";
 
-function ResponsiveSmalview() {
-  const [activeTab, setActiveTab] = useState("latest"); 
+function ResponsiveSmalview({news, newsError}) {
+  const [activeTab, setActiveTab] = useState("latest");
+
 
   return (
     <div>
@@ -36,7 +37,7 @@ function ResponsiveSmalview() {
       </div>
 
       <div className="mt-4">
-        {activeTab === "latest" ? <LatestNews /> : <TrendingNews />}
+        {activeTab === "latest" ? <LatestNews news={news} newsError={newsError}/> : <TrendingNews />}
       </div>
     </div>
   );
