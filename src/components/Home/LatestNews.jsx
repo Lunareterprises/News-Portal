@@ -209,7 +209,7 @@ const LatestNews = () => {
                   </button>
                 )}
 
-                {index % 2 === 1 && ads.length > 0 && !hiddenAds[index] && (
+                {index % 3 === 1 && ads.length > 0 && !hiddenAds[index] && (
                   <div className="my-6 w-full relative flex justify-center">
                     <button
                       onClick={() => handleCloseAd(index)}
