@@ -4,38 +4,37 @@ import { getads, listNews } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
-// const LatestNews = ({news}) => {
-const LatestNews = () => {
-  const [news, setNews] = useState([]);
+const LatestNews = ({ news, newsError, setNewsError }) => {
+  // const LatestNews = () => {
+  //   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [hiddenAds, setHiddenAds] = useState({});
-  const [newsError, setNewsError] = useState(null);  // Track news fetch errors
+  const [newsErrornews, setNewsErrornews] = useState(null); // Track news fetch errors
 
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await listNews();
-        if (response?.data) {
-          const filteredNews = response.data.filter(
-            (article) =>
-              article.displayOn === "latest-news" || article.displayOn === "both"
-          );
-          setNews(filteredNews);
-        } else {
-          throw new Error("News data is empty or malformed");
-        }
-      } catch (error) {
-        console.error("Error fetching news:", error);
-        setNewsError("Failed to load news. Please try again later.");
-      }
-    };
-
+    // const fetchNews = async () => {
+    //   try {
+    //     const response = await listNews();
+    //     if (response?.data) {
+    //       const filteredNews = response.data.filter(
+    //         (article) =>
+    //           article.displayOn === "latest-news" || article.displayOn === "both"
+    //       );
+    //       setNews(filteredNews);
+    //     } else {
+    //       throw new Error("News data is empty or malformed");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching news:", error);
+    //     setNewsError("Failed to load news. Please try again later.");
+    //   }
+    // };
     const fetchAds = async () => {
       try {
         const response = await getads();
@@ -46,11 +45,11 @@ const LatestNews = () => {
         }
       } catch (error) {
         console.error("Error fetching ads:", error);
-        setNewsError("Failed to load ads. Please try again later.");
+        setNewsErrornews("Failed to load ads. Please try again later.");
       }
     };
 
-    fetchNews();
+    // fetchNews();
     fetchAds();
   }, []);
 
@@ -126,16 +125,30 @@ const LatestNews = () => {
     if (index === -1) return "";
 
     const cleanedHtml = DOMPurify.sanitize(tempDiv.innerHTML, {
-      ALLOWED_ATTR: ['style', 'class', 'id'],
-      ALLOWED_TAGS: ['*', 'b', 'i', 'u', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em'],
+      ALLOWED_ATTR: ["style", "class", "id"],
+      ALLOWED_TAGS: [
+        "*",
+        "b",
+        "i",
+        "u",
+        "a",
+        "img",
+        "p",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "strong",
+        "em",
+      ],
     });
 
     const span = document.createElement("span");
     span.innerHTML = cleanedHtml;
     return span.innerHTML;
   };
-
- 
 
   return (
     <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
@@ -147,8 +160,9 @@ const LatestNews = () => {
           {newsError}
         </div>
       )}
+
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
-        {Array.isArray(news) &&
+        {Array.isArray(news) && news.length > 0 ? (
           news.map((article, index) => {
             const isExpanded = expanded[article.id];
             const rawContent = article.content || "";
@@ -158,20 +172,27 @@ const LatestNews = () => {
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
             const shortText = plainText.substring(0, 250);
             const showReadMore = plainText.length > 250;
-            
+
             const imageKey = `news-${article.id}`;
 
             return (
               <div key={article.id} className="mb-6 relative">
                 <div className="relative">
                   <img
-                    src={loadedImages[imageKey] || `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`}
+                    src={
+                      loadedImages[imageKey] ||
+                      `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`
+                    }
                     alt={article.title}
                     className="w-full h-56 object-cover"
-                    onError={(e) => e.target.src = '/path/to/fallback-image.jpg'} // Error fallback image
+                    onError={(e) =>
+                      (e.target.src = "/path/to/fallback-image.jpg")
+                    }
                   />
                 </div>
-                <h3 className="text-xl font-semibold mt-3">{article.heading}</h3>
+                <h3 className="text-xl font-semibold mt-3">
+                  {article.heading}
+                </h3>
 
                 <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
                   {!isExpanded ? (
@@ -192,8 +213,24 @@ const LatestNews = () => {
                     <div
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(rawContent, {
-                          ALLOWED_ATTR: ['style', 'class', 'id'],
-                          ALLOWED_TAGS: ['*', 'b', 'i', 'u', 'a', 'img', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em'],
+                          ALLOWED_ATTR: ["style", "class", "id"],
+                          ALLOWED_TAGS: [
+                            "*",
+                            "b",
+                            "i",
+                            "u",
+                            "a",
+                            "img",
+                            "p",
+                            "h1",
+                            "h2",
+                            "h3",
+                            "h4",
+                            "h5",
+                            "h6",
+                            "strong",
+                            "em",
+                          ],
                         }),
                       }}
                     />
@@ -219,7 +256,9 @@ const LatestNews = () => {
                       ✕
                     </button>
                     <img
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/${ads[index % ads.length]?.ads_image}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${
+                        ads[index % ads.length]?.ads_image
+                      }`}
                       alt={ads[index % ads.length]?.ads_name || "Advertisement"}
                       className="w-full"
                     />
@@ -227,7 +266,12 @@ const LatestNews = () => {
                 )}
               </div>
             );
-          })}
+          })
+        ) : (
+          <div className="text-center text-gray-500 py-10">
+            No News Available
+          </div>
+        )}
       </div>
     </div>
   );
