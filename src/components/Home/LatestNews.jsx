@@ -4,7 +4,7 @@ import { getads, listNews } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
-const LatestNews = ({ news, newsError, setNewsError }) => {
+const LatestNews = ({ news, newsError, setNewsError, loading }) => {
   // const LatestNews = () => {
   //   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
@@ -162,7 +162,11 @@ const LatestNews = ({ news, newsError, setNewsError }) => {
       )}
 
       <div className="h-full overflow-y-auto py-4 scrollbar-hide">
-        {Array.isArray(news) && news.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+          </div>
+        ) : Array.isArray(news) && news.length > 0 ? (
           news.map((article, index) => {
             const isExpanded = expanded[article.id];
             const rawContent = article.content || "";
