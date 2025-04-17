@@ -42,8 +42,12 @@ const SideMenuCategories = ({onCategorySelect}) => {
     const fetchCategories = async () => {
       try {
         const response = await listCategory();
-        setCategories(response.data);
-
+        if(response.result){
+          setCategories(response.data);
+        }
+        else{
+          console.log(response.message);
+        }
         
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -193,7 +197,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
           </li>
 
           {/* Dynamic Categories */}
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <li
               key={category.id}
               className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
@@ -271,13 +275,13 @@ const SideMenuCategories = ({onCategorySelect}) => {
         <div className="relative inline-flex dropdown-menu">
           <button
             className={`px-4 py-2 flex items-center whitespace-nowrap ${
-              districtsInKerala.some((item) => isSelected(item))
+              districtsInKerala?.some((item) => isSelected(item))
                 ? "text-[#2872AF] font-semibold"
                 : "bg-gray-100"
             }`}
             onClick={() => setIsDistrictOpen(!isDistrictOpen)}
           >
-            {districtsInKerala.some((item) => isSelected(item))
+            {districtsInKerala?.some((item) => isSelected(item))
               ? selectedCategory.name
               : "District News"}
             <span className="ml-2 text-[12px]">{isDistrictOpen ? "▲" : "▼"}</span>
@@ -302,7 +306,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
         </div>
 
         {/* Dynamic Categories */}
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <button
             key={category.id}
             className={`px-4 py-2 whitespace-nowrap ${
@@ -312,7 +316,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
             }`}
             onClick={() => handleCategorySelect({ id: category.id, name: category.name })}
           >
-            {category.name}
+            {category?.name}
           </button>
         ))}
       </div>

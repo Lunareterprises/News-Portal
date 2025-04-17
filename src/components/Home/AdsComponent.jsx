@@ -10,15 +10,19 @@ const AdsComponent = () => {
     const fetchAds = async () => {
       try {
         const response = await getads();
-        const data =response.data;
-        setAds(data);
-        // Initialize visibility state
-        const adVisibility = data.reduce((acc, ad) => {
-          acc[ad.ads_id] = true;
-          return acc;
-        }, {});
-        setVisibleAds(adVisibility);
-
+        
+        if(response.result === true){
+          setAds(response?.data);
+          // Initialize visibility state
+          const adVisibility = response?.data.reduce((acc, ad) => {
+            acc[ad.ads_id] = true;
+            return acc;
+          }, {});
+          setVisibleAds(adVisibility);
+        }
+        else{
+          console.log(response?.message)
+        }
       } catch (error) {
         console.error("Error fetching ads:", error);
       }

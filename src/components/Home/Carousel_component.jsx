@@ -10,8 +10,13 @@ function Carousel_component() {
       const fetchNews = async () => {
         try {
           const response = await getBanner();
-          const data = response.data;
-          setNews(data);
+          if(response.result===true){
+            const data = response.data;
+            setNews(data);
+          }
+          else{
+            console.log(response.message);
+          }
         } catch (error) {
           console.error("Error fetching news:", error);
         }
@@ -21,7 +26,7 @@ function Carousel_component() {
     }, []);
   return (
     <div>
-        {news.length > 0 && (
+        {news?.length > 0 && (
         <Carousel
             autoPlay
             infiniteLoop
