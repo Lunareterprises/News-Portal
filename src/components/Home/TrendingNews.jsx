@@ -49,43 +49,36 @@ const TrendingNews = () => {
     return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = "Anonymous";
-
       img.onload = () => {
-        try {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-          canvas.width = img.width;
-          canvas.height = img.height;
+        canvas.width = img.width;
+        canvas.height = img.height;
 
-          ctx.drawImage(img, 0, 0);
+        ctx.drawImage(img, 0, 0);
+        ctx.font = `${img.width / 15}px Arial`;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.textAlign = "top";
+        ctx.textBaseline = "top";
 
-          ctx.font = `${img.width / 20}px Arial`;
-          ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 0);
+        ctx.fillText("World One", 0, 0);
+        ctx.restore();
 
-          ctx.save();
-          ctx.translate(canvas.width / 2, canvas.height / 2);
-          ctx.rotate(-Math.PI / 6);
-          ctx.fillText("World One", 0, 0);
-          ctx.restore();
-
-          const watermarkedImage = canvas.toDataURL("image/jpeg");
-          setLoadedImages((prev) => ({
-            ...prev,
-            [`news-${id}`]: watermarkedImage,
-          }));
-          resolve(watermarkedImage);
-        } catch (e) {
-          console.error("Error applying watermark:", e);
-          resolve(imageSrc); // Fallback
-        }
+        const watermarkedImage = canvas.toDataURL("image/jpeg");
+        setLoadedImages((prev) => ({
+          ...prev,
+          [`news-${id}`]: watermarkedImage,
+        }));
+        resolve(watermarkedImage);
       };
 
-      img.onerror = (e) => {
-        console.error("Failed to load image for watermarking:", imageSrc, e);
-        resolve(imageSrc);
+      img.onerror = () => {
+        console.error("Error loading image for watermarking");
+        resolve(imageSrc); // Fallback to the original image
       };
 
       img.src = imageSrc;
@@ -151,7 +144,7 @@ const TrendingNews = () => {
                 <img
                   src={loadedImages[imageKey] || fallbackImage}
                   alt={article.heading}
-                  className="w-full h-56 object-cover"
+                  className="w-full h-auto object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "/default-news-image.jpg"; // fallback image

@@ -66,15 +66,16 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
 
         ctx.drawImage(img, 0, 0);
         ctx.font = `${img.width / 15}px Arial`;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.textAlign = "top";
+        ctx.textBaseline = "top";
 
         ctx.save();
         ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(-Math.PI / 6);
-        ctx.fillText("World One", 0, 0);
+        ctx.rotate(-Math.PI / 0); // (This is actually rotating by infinity — did you mean -Math.PI / 4?)
+        ctx.fillText("World One", 0, 30); // Move watermark slightly downward
         ctx.restore();
+        
 
         const watermarkedImage = canvas.toDataURL("image/jpeg");
         setLoadedImages((prev) => ({
@@ -188,7 +189,7 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
                       `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`
                     }
                     alt={article.title}
-                    className="w-full h-56 object-cover"
+                    className="w-full h-auto object-cover"
                     onError={(e) =>
                       (e.target.src = "/path/to/fallback-image.jpg")
                     }

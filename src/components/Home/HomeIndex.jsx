@@ -17,14 +17,29 @@ function HomeIndex() {
     try {
       setLoading(true);
       const response = await listNewsByCategory({ categoryId });
-
-      setNews(response.data);
+      console.log("response--->>", response);
+      
+      if (response?.data) {
+        const filteredNews = response.data.filter(
+          (article) =>
+            // console.log("article", article.displayOn)
+            
+            article.displayOn === "latest-news" || article.displayOn === "both"
+        );
+        console.log("filteredNews--->>",filteredNews);
+        
+        setNews(filteredNews);
+      } else {
+        throw new Error("News data is empty or malformed");
+      }
     } catch (error) {
       console.error("Error fetching news:", error);
-    }finally {
+      setNewsError("Failed to load news. Please try again later.");
+    } finally {
       setLoading(false); // stop loader
     }
   };
+  
 
   // Fetch news for the default category "LATEST" when the component mounts
   useEffect(() => {
