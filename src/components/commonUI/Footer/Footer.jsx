@@ -71,7 +71,7 @@ const Footer = () => {
 
   const footerLinks = [
     { title: "Home", link: "/" },
-    { title: "About", link: "/" },
+    { title: "About", link: "/AboutUs" },
   ];
 
   return (
