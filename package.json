@@ -21,10 +21,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
-<<<<<<< HEAD
-=======
     "sweetalert2": "^11.19.1",
->>>>>>> 6db7f0d0717bb08b39d8d5405a50d850bb07673d
     "yup": "^1.6.1"
   },
   "devDependencies": {
