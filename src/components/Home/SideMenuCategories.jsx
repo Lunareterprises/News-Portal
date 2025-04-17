@@ -30,7 +30,7 @@ const newsFrom = [
 const SideMenuCategories = ({onCategorySelect}) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({
-    id: "LATEST",
+    id: "",
     name: "Latest News",
   });
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -100,7 +100,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
                 ? "bg-[#2872AF] text-white"
                 : "hover:text-blue-500"
             }`}
-            onClick={() => handleCategorySelect({ id: "LATEST", name: "Latest News" })}
+            onClick={() => handleCategorySelect({ id: "", name: "Latest News" })}
           >
             <Image
               width={32}
@@ -228,7 +228,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
               ? "text-[#2872AF] font-semibold"
               : "bg-gray-100"
           }`}
-          onClick={() => handleCategorySelect({ id: "LATEST", name: "Latest News" })}
+          onClick={() => handleCategorySelect({ id: "", name: "Latest News" })}
         >
           Latest News
         </button>
