@@ -17,23 +17,20 @@ function HomeIndex() {
     try {
       setLoading(true);
       const response = await listNewsByCategory({ categoryId });
-      console.log("response--->>", response);
       
-      if (response?.data) {
-        const filteredNews = response.data.filter(
+      if (response?.result === true) {
+        const filteredNews = response?.data.filter(
           (article) =>    
-            // console.log("article.....................",article)        
-            article.displayOn === "latest-news" || article.displayOn === "both"
+            article?.displayOn === "latest-news" || article?.displayOn === "both"
         );
-        console.log("filteredNews--->>",filteredNews);
-        
         setNews(filteredNews);
       } else {
-        throw new Error("News data is empty or malformed");
+        setNews("");
+        console.log("News data is empty or malformed");
       }
     } catch (error) {
       console.error("Error fetching news:", error);
-      setNewsError("Failed to load news. Please try again later.");
+      // setNewsError("Failed to load news. Please try again later.");
     } finally {
       setLoading(false); // stop loader
     }

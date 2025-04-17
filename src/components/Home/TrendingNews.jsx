@@ -23,20 +23,24 @@ const TrendingNews = () => {
 
         const response = await listNews(dataNews);
         const data = response.data;
-
-        if (!Array.isArray(data)) throw new Error("Invalid news data format");
-
-        const filteredNews = data.filter(
-          (article) =>
-            article.displayOn === "trending-news" ||
-            article.displayOn === "both"
-        );
-
-        setNews(filteredNews);
-        setError(null); // Clear any previous error
+        if (response?.result === true) {
+          if (!Array.isArray(data)) console.log("Invalid news data format");
+        
+          const filteredNews = data.filter(
+            (article) =>
+              article?.displayOn === "trending-news" ||
+              article?.displayOn === "both"
+          );
+          setNews(filteredNews);
+          setError(null); // Clear any previous error
+        }
+        else{
+            console.log(response.message)
+        }
+        
       } catch (err) {
         console.error("Error fetching news:", err);
-        setError("Failed to load news. Please try again later.");
+        // setError("Failed to load news. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -125,7 +129,7 @@ const TrendingNews = () => {
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
           </div>
-        ) : Array.isArray(news) && news.length > 0 ? (
+        ) : Array.isArray(news) && news?.length > 0 ? (
           news.map((article) => {
             const isExpanded = expanded[article.id];
             const rawContent = article.content || "";
@@ -134,7 +138,7 @@ const TrendingNews = () => {
             tempDiv.innerHTML = rawContent;
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
             const shortText = plainText.substring(0, 250);
-            const showReadMore = plainText.length > 250;
+            const showReadMore = plainText?.length > 250;
 
             const imageKey = `news-${article.id}`;
             const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
@@ -210,7 +214,7 @@ const TrendingNews = () => {
             );
           })
         ) : (
-          <div className="text-center text-gray-500 py-10 text-lg">
+          <div className="text-center text-gray-500 py-10 text-base">
             No Trending News Available
           </div>
         )}

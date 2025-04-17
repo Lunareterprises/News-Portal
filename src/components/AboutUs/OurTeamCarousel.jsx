@@ -35,8 +35,13 @@ function OurTeamCarousel() {
     const fetchteam = async () => {
       try {
         const response = await ourteam();
-        const data = response.data;
-        setTeamMembers(data);
+        if(response.result){
+          const data = response.data;
+          setTeamMembers(data);
+        }
+        else{
+          console.log(response.message);
+        }
       } catch (error) {
         console.error("Error fetching team members:", error);
       }
@@ -47,12 +52,12 @@ function OurTeamCarousel() {
 
   // Max 5 or less depending on available data
   const slidesToShowCount =
-  teamMembers.length >= 5 ? 5 : teamMembers.length > 0 ? teamMembers.length : 1;
+  teamMembers?.length >= 5 ? 5 : teamMembers?.length > 0 ? teamMembers?.length : 1;
 
 
   const settings = {
     dots: true,
-    infinite: teamMembers.length > slidesToShowCount,
+    infinite: teamMembers?.length > slidesToShowCount,
     speed: 500,
     slidesToShow: slidesToShowCount,
     slidesToScroll: 1,
@@ -62,19 +67,19 @@ function OurTeamCarousel() {
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: Math.min(4, teamMembers.length || 1),
+          slidesToShow: Math.min(4, teamMembers?.length || 1),
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: Math.min(3, teamMembers.length || 1),
+          slidesToShow: Math.min(3, teamMembers?.length || 1),
         },
       },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: Math.min(2, teamMembers.length || 1),
+          slidesToShow: Math.min(2, teamMembers?.length || 1),
         },
       },
       {

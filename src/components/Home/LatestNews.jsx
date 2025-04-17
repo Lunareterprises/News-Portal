@@ -1,17 +1,17 @@
 "use client";
 
-import { getads, listNews } from "@/services/newsService";
+import { getads } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
-const LatestNews = ({ news, newsError, setNewsError, loading }) => {
+const LatestNews = ({ news, newsError, loading }) => {
   // const LatestNews = () => {
   //   const [news, setNews] = useState([]);
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [hiddenAds, setHiddenAds] = useState({});
-  const [newsErrornews, setNewsErrornews] = useState(null); // Track news fetch errors
+  // const [newsErrornews, setNewsErrornews] = useState(null); // Track news fetch errors
 
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
@@ -38,14 +38,14 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
     const fetchAds = async () => {
       try {
         const response = await getads();
-        if (response?.data) {
+        if (response?.result===true) {
           setAds(response.data);
         } else {
-          throw new Error("Ads data is empty or malformed");
+          console.log("Ads data is empty or malformed");
         }
       } catch (error) {
         console.error("Error fetching ads:", error);
-        setNewsErrornews("Failed to load ads. Please try again later.");
+        // setNewsErrornews("Failed to load ads. Please try again later.");
       }
     };
 
@@ -167,7 +167,7 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
           </div>
-        ) : Array.isArray(news) && news.length > 0 ? (
+        ) : Array.isArray(news) && news?.length > 0 ? (
           news.map((article, index) => {
             const isExpanded = expanded[article.id];
             const rawContent = article.content || "";
@@ -176,19 +176,19 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
             tempDiv.innerHTML = rawContent;
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
             const shortText = plainText.substring(0, 250);
-            const showReadMore = plainText.length > 250;
+            const showReadMore = plainText?.length > 250;
 
             const imageKey = `news-${article.id}`;
 
             return (
-              <div key={article.id} className="mb-6 relative">
+              <div key={article?.id} className="mb-6 relative">
                 <div className="relative">
                   <img
                     src={
                       loadedImages[imageKey] ||
-                      `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`
+                      `${process.env.NEXT_PUBLIC_API_URL}/${article?.image}`
                     }
-                    alt={article.title}
+                    alt={article?.title}
                     className="w-full h-auto object-cover"
                     onError={(e) =>
                       (e.target.src = "/path/to/fallback-image.jpg")
@@ -196,7 +196,7 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
                   />
                 </div>
                 <h3 className="text-xl font-semibold mt-3">
-                  {article.heading}
+                  {article?.heading}
                 </h3>
 
                 <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
@@ -206,7 +206,7 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
                       {showReadMore && (
                         <div className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
                           <button
-                            onClick={() => toggleReadMore(article.id)}
+                            onClick={() => toggleReadMore(article?.id)}
                             className="bg-[#2872AF] font-medium text-white px-4 py-1 cursor-pointer whitespace-nowrap"
                           >
                             Read More
@@ -251,7 +251,7 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
                   </button>
                 )}
 
-                {index % 3 === 1 && ads.length > 0 && !hiddenAds[index] && (
+                {index % 3 === 1 && ads?.length > 0 && !hiddenAds[index] && (
                   <div className="my-6 w-full relative flex justify-center">
                     <button
                       onClick={() => handleCloseAd(index)}
@@ -262,9 +262,9 @@ const LatestNews = ({ news, newsError, setNewsError, loading }) => {
                     </button>
                     <img
                       src={`${process.env.NEXT_PUBLIC_API_URL}/${
-                        ads[index % ads.length]?.ads_image
+                        ads[index % ads?.length]?.ads_image
                       }`}
-                      alt={ads[index % ads.length]?.ads_name || "Advertisement"}
+                      alt={ads[index % ads?.length]?.ads_name || "Advertisement"}
                       className="w-full"
                     />
                   </div>
