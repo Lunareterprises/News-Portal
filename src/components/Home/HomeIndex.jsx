@@ -21,9 +21,8 @@ function HomeIndex() {
       
       if (response?.data) {
         const filteredNews = response.data.filter(
-          (article) =>
-            // console.log("article", article.displayOn)
-            
+          (article) =>    
+            // console.log("article.....................",article)        
             article.displayOn === "latest-news" || article.displayOn === "both"
         );
         console.log("filteredNews--->>",filteredNews);
@@ -43,7 +42,7 @@ function HomeIndex() {
 
   // Fetch news for the default category "LATEST" when the component mounts
   useEffect(() => {
-    fetchNewsForCategory("LATEST");
+    fetchNewsForCategory("");
   }, []); // Empty dependency array means this runs once when the component is mounted
 
   return (
