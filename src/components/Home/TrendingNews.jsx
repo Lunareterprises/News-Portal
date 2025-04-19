@@ -4,6 +4,8 @@ import Carousel_component from "./Carousel_component";
 import AdsComponent from "./AdsComponent";
 import { listNews } from "@/services/newsService";
 import DOMPurify from "dompurify";
+import SharePopup from "./SharePopup";
+import { FiShare2 } from "react-icons/fi";
 
 const TrendingNews = () => {
   const [expanded, setExpanded] = useState({});
@@ -11,6 +13,7 @@ const TrendingNews = () => {
   const [loadedImages, setLoadedImages] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [activeShare, setActiveShare] = useState(null);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -210,6 +213,28 @@ const TrendingNews = () => {
                     Read Less
                   </button>
                 )}
+
+                <div className="relative group flex justify-end">
+                  <button
+                    onClick={() =>
+                      setActiveShare((prev) => (prev === article.id ? null : article.id))
+                    }
+                    className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
+                  >
+                    <FiShare2 />
+                  </button>
+                  <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
+                    Share this News
+                  </div>
+
+                  {activeShare === article.id && (
+                    <SharePopup
+                      url={`https://www.worldonetv.in/news/${article.id}`}
+                      headline={article.heading}
+                      onClose={() => setActiveShare(null)}
+                    />
+                  )}
+                </div>
               </div>
             );
           })
