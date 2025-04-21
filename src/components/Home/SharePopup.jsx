@@ -33,12 +33,6 @@ const SharePopup = ({ url, headline, onClose }) => {
     }, 1500);
   };
 
-  const shareToFacebook = () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    window.open(facebookUrl, '_blank');
-  };
-  
-
   return (
     <div className="absolute right-0 top-8 z-50 bg-white shadow-md rounded p-3 w-48" ref={popupRef}>
       <p className="text-xs text-gray-500 mb-2">Share via:</p>
@@ -49,9 +43,9 @@ const SharePopup = ({ url, headline, onClose }) => {
         <a href={shareLinks.instagram} target="_blank" className="flex items-center gap-2 text-pink-500 cursor-pointer">
           <FaInstagram /> 
         </a>
-        <button onClick={shareToFacebook} target="_blank" className="flex items-center gap-2 text-blue-600 cursor-pointer">
+        <a href={shareLinks.facebook} target="_blank" className="flex items-center gap-2 text-blue-600 cursor-pointer">
           <FaFacebook /> 
-        </button>
+        </a>
         {/* <a href={shareLinks.gmail} className="flex items-center gap-2 text-red-600">
           <FaEnvelope /> Gmail
         </a> */}
