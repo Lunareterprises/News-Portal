@@ -1,5 +1,6 @@
 "use client";
 
+
 import { getads } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
