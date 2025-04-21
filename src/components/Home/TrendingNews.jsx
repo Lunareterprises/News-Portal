@@ -10,6 +10,7 @@ import { FiShare2 } from "react-icons/fi";
 const TrendingNews = () => {
   const [expanded, setExpanded] = useState({});
   const [news, setNews] = useState([]);
+  const [loadedImages, setLoadedImages] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeShare, setActiveShare] = useState(null);
@@ -27,7 +28,7 @@ const TrendingNews = () => {
         const data = response.data;
         if (response?.result === true) {
           if (!Array.isArray(data)) console.log("Invalid news data format");
-
+        
           const filteredNews = data.filter(
             (article) =>
               article?.displayOn === "trending-news" ||
@@ -35,11 +36,14 @@ const TrendingNews = () => {
           );
           setNews(filteredNews);
           setError(null); // Clear any previous error
-        } else {
-          console.log(response.message);
         }
+        else{
+            console.log(response.message)
+        }
+        
       } catch (err) {
         console.error("Error fetching news:", err);
+        // setError("Failed to load news. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -47,6 +51,60 @@ const TrendingNews = () => {
 
     fetchNews();
   }, []);
+
+  const addWatermark = (imageSrc, id) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+        ctx.font = `${img.width / 15}px Arial`;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.textAlign = "top";
+        ctx.textBaseline = "top";
+
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 0);
+        ctx.fillText("World One", 0, 0);
+        ctx.restore();
+
+        const watermarkedImage = canvas.toDataURL("image/jpeg");
+        setLoadedImages((prev) => ({
+          ...prev,
+          [`news-${id}`]: watermarkedImage,
+        }));
+        resolve(watermarkedImage);
+      };
+
+      img.onerror = () => {
+        console.error("Error loading image for watermarking");
+        resolve(imageSrc); // Fallback to the original image
+      };
+
+      img.src = imageSrc;
+    });
+  };
+
+  useEffect(() => {
+    if (Array.isArray(news)) {
+      news.forEach((article) => {
+        const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
+        const imageKey = `news-${article.id}`;
+        if (article.image && !loadedImages[imageKey]) {
+          addWatermark(imageUrl, article.id).catch((err) =>
+            console.error("Watermark error:", err)
+          );
+        }
+      });
+    }
+  }, [news]);
 
   const toggleReadMore = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -64,6 +122,7 @@ const TrendingNews = () => {
         Trending & Breaking News
       </h2>
 
+      {/* Show error if fetch failed */}
       {error && (
         <div className="text-red-600 bg-red-100 p-4 my-4 rounded">{error}</div>
       )}
@@ -84,12 +143,13 @@ const TrendingNews = () => {
             const shortText = plainText.substring(0, 250);
             const showReadMore = plainText?.length > 250;
 
+            const imageKey = `news-${article.id}`;
             const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
 
             return (
               <div key={article.id} className="mb-6 relative">
                 <img
-                  src={fallbackImage}
+                  src={loadedImages[imageKey] || fallbackImage}
                   alt={article.heading}
                   className="w-full h-auto object-cover"
                   onError={(e) => {
