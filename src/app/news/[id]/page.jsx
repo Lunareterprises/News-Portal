@@ -93,19 +93,19 @@ const ArticlePage = () => {
       <Header />
       <HeaderAdd />
 
-      <div className="container mx-auto p-4 md:p-10 flex flex-col md:flex-row gap-8">
+      <div className="container mx-auto p-4 md:p-10 flex flex-col lg:flex-row gap-8">
         {/* Right side - Main Article */}
-        <main className="w-full md:w-3/4">
-          <h1 className="text-2xl font-bold text-center mb-4">{article.heading}</h1>
+        <main className="w-full lg:w-3/4">
+          <h1 className="text-lg md:text-2xl font-bold text-center  mb-4">{article.heading}</h1>
           {watermarkedImage && (
             <img
               src={watermarkedImage}
               alt={article.heading}
-              className="w-full h-96 mb-4 object-contain"
+              className="w-full h-auto md:h-96 mb-4 object-contain"
             />
           )}
           <div
-            className="prose max-w-none"
+            className="prose w-full"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(article.content),
             }}
@@ -113,7 +113,7 @@ const ArticlePage = () => {
         </main>
 
         {/* Left side - Ads */}
-        <aside className="w-full md:w-1/4 space-y-4">
+        <aside className="w-full lg:w-1/4 space-y-4">
           <h2 className="text-lg font-semibold mb-2 text-center">Sponsored Ads</h2>
           {ads.length > 0 ? (
             ads.map((ad) => (

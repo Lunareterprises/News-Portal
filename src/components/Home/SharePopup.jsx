@@ -55,7 +55,7 @@ const SharePopup = ({ url, headline, onClose }) => {
         >
           <FaLink /> 
           {copied && (
-            <span className="absolute -top-6 left-0 text-xs bg-black text-white px-2 py-1 rounded">
+            <span className="absolute -top-6 -left-10 text-xs bg-black text-white px-2 py-1 rounded whitespace-nowrap">
               Link copied!
             </span>
           )}
