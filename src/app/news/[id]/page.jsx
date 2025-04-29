@@ -12,6 +12,7 @@ import TrendingNews from "@/components/Home/TrendingNews";
 import YouTubeCarousel from "@/components/Home/YouTubeCarousel";
 import SharePopup from "@/components/Home/SharePopup";
 import Image from "next/image";
+
 import RelatedNews from "@/components/Home/RelatedNews";
 import Gallery from "@/components/Home/Gallery";
 import formatDate from '@/utils/formatDate';
@@ -33,6 +34,9 @@ const ArticlePage = () => {
         const numericId = Number(id);
         const filtered = response.data.find((item) => item.id === numericId);
         setArticle(filtered);
+        if (filtered?.image) {
+          addWatermark(`${process.env.NEXT_PUBLIC_API_URL}/${filtered.image}`);
+        }
       }
     } catch (error) {
       console.error("Error loading article:", error);
@@ -50,6 +54,41 @@ const ArticlePage = () => {
     } catch (error) {
       console.error("Error fetching ads:", error);
     }
+  };
+
+  const addWatermark = (imageSrc) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      ctx.font = `${img.width / 15}px Arial`;
+      ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+      ctx.textAlign = "start";
+      ctx.textBaseline = "top";
+
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(-Math.PI / 0); // Diagonal watermark
+      ctx.fillText("World One", 0, 0);
+      ctx.restore();
+
+      const watermarked = canvas.toDataURL("image/jpeg");
+      // setWatermarkedImage(watermarked);
+    };
+
+    img.onerror = () => {
+      console.error("Failed to load image for watermarking.");
+      // setWatermarkedImage(imageSrc); // fallback
+    };
+
+    img.src = imageSrc;
   };
 
   useEffect(() => {
@@ -103,7 +142,8 @@ const ArticlePage = () => {
 
             <div className="relative flex justify-between items-center">
               <p className="flex justify-end items-center gap-3 mt-3">
-                <Image src="/images/categories/Group56.png" width={18} height={50} alt="time" />
+              <Image src="/images/categories/Group56.png" width={18} height={50} alt="time" />
+
                 <span className="text-[#787878]">{formatDate(article.updated_at)}</span>
               </p>
               <div className="group">
@@ -113,7 +153,7 @@ const ArticlePage = () => {
                   }
                   className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
                 >
-                  <Image src="/images/categories/Vector.png" width={25} height={50} alt="share" />
+                  <Image src="/images/categories/Vector.png" width={18} height={50} alt="share" />
                 </button>
                 <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
                   Share this News
@@ -155,6 +195,7 @@ const ArticlePage = () => {
 
       <Footer />
     </>
+
   );
 };
 

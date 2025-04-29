@@ -11,13 +11,12 @@ import formatDate from '@/utils/formatDate'; // adjust the path based on your pr
 const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
+  const [loadedImages, setLoadedImages] = useState({});
   const [hiddenAds, setHiddenAds] = useState({});
+  // const [newsErrornews, setNewsErrornews] = useState(null); // Track news fetch errors
   const [activeShare, setActiveShare] = useState(null);
-  console.log('====================================');
-  console.log("news-->>", news);
-  console.log('====================================');
-  const router = useRouter();
 
+  const router = useRouter();
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
   };
@@ -26,21 +25,97 @@ const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
 
   
   useEffect(() => {
+    // const fetchNews = async () => {
+    //   try {
+    //     const response = await listNews();
+    //     if (response?.data) {
+    //       const filteredNews = response.data.filter(
+    //         (article) =>
+    //           article.displayOn === "latest-news" || article.displayOn === "both"
+    //       );
+    //       setNews(filteredNews);
+    //     } else {
+    //       throw new Error("News data is empty or malformed");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching news:", error);
+    //     setNewsError("Failed to load news. Please try again later.");
+    //   }
+    // };
     const fetchAds = async () => {
       try {
         const response = await getads();
-        if (response?.result === true) {
+        if (response?.result===true) {
           setAds(response.data);
         } else {
           console.log("Ads data is empty or malformed");
         }
       } catch (error) {
         console.error("Error fetching ads:", error);
+        // setNewsErrornews("Failed to load ads. Please try again later.");
       }
     };
 
+    // fetchNews();
     fetchAds();
   }, []);
+
+  const addWatermark = (imageSrc, id) => {
+    return new Promise((resolve) => {
+      const img = new window.Image(); 
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+        ctx.font = `${img.width / 15}px Arial`;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.textAlign = "top";
+        ctx.textBaseline = "top";
+
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 0); // (This is actually rotating by infinity — did you mean -Math.PI / 4?)
+        ctx.fillText("World One", 0, 30); // Move watermark slightly downward
+        ctx.restore();
+        
+
+        const watermarkedImage = canvas.toDataURL("image/jpeg");
+        setLoadedImages((prev) => ({
+          ...prev,
+          [`news-${id}`]: watermarkedImage,
+        }));
+        resolve(watermarkedImage);
+      };
+
+      img.onerror = () => {
+        console.error("Error loading image for watermarking");
+        resolve(imageSrc); // Fallback to the original image
+      };
+
+      img.src = imageSrc;
+    });
+  };
+
+  useEffect(() => {
+    if (Array.isArray(news)) {
+      news.forEach((article) => {
+        if (
+          `${process.env.NEXT_PUBLIC_API_URL}/${article.image}` &&
+          !loadedImages[`news-${article.id}`]
+        ) {
+          addWatermark(
+            `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`,
+            article.id
+          );
+        }
+      });
+    }
+  }, [news]);
 
   const toggleReadMore = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -110,6 +185,8 @@ const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
             const shortText = plainText.substring(0, 250);
             const showReadMore = plainText?.length > 250;
+
+            const imageKey = `news-${article.id}`;
 
             return (
               <div key={article?.id} className="mb-6 relative">
@@ -217,6 +294,8 @@ const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
                     Read Less
                   </button>
                 )}
+
+
 
 
 
