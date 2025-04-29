@@ -1,0 +1,53 @@
+{
+    "franchisePhotos": [
+      {
+        "id": 1,
+        "images": ["/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg","/images/Outlets/photos1.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      },
+      {
+        "id": 2,
+        "images": ["/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      },
+      {
+        "id": 3,
+        "images": ["/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      },
+      {
+        "id": 4,
+        "images": ["/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg","/images/Outlets/photos.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      },
+      {
+        "id": 5,
+        "images": ["/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg","/images/Outlets/photos1.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      },
+      {
+        "id": 6,
+        "images": ["/images/Outlets/photos1.jpeg", "/images/Outlets/photos.jpeg", "/images/Outlets/photos1.jpeg"],
+        "subTitle": "Top Performing",
+        "img": "/images/Outlets/person1.png",
+        "name": "Meera",
+        "title": "Thiruvananthapuram, Kerala"
+      }
+    ]
+  }
+  

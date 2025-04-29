@@ -11,4 +11,6 @@ export const API_ENDPOINTS = {
   LIST_ARTICLE: "/worldone/admin/news",
   GET_ADS: "/worldone/admin/ads",
   LIST_BANNER: "/worldone/admin/banner",
+  LIST_YOUTUBE :"/worldone/admin/youtube",
+  LIST_GALLERY :"/worldone/admin/gallery"
 };

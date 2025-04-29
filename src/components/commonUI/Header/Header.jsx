@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <>
       {/* HEADER */}
-      <header className="shadow-none bg-[#F5F5F5] sticky top-0 z-20 w-full">
+      <header className="bg-[#F5F5F5] w-full z-30">
         <div className="py-5 px-6 flex justify-between items-center">
           {/* Logo */}
           <div className="flex justify-center items-center">
@@ -72,7 +72,7 @@ const Header = () => {
                 <Link
                   href={item.link}
                   className="text-[#2872AF] hover:text-[#004B87] text-lg font-medium"
-                  onClick={() => setIsOpen(false)} // Close menu on click
+                  onClick={() => setIsOpen(false)}
                 >
                   {item.name}
                 </Link>
@@ -92,6 +92,16 @@ const Header = () => {
           </ul>
         </div>
       </header>
+
+      {/* Sticky header only on mobile */}
+      <style jsx>{`
+        @media (max-width: 1023px) {
+          header {
+            position: sticky;
+            top: 0;
+          }
+        }
+      `}</style>
 
       {/* CONTACT MODAL */}
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

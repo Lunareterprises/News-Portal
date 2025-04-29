@@ -4,24 +4,26 @@ import { getads } from "@/services/newsService";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { useRouter } from "next/navigation";
-import { FiShare2 } from "react-icons/fi";
 import SharePopup from "./SharePopup";
+import Image from "next/image";
+import formatDate from '@/utils/formatDate'; // adjust the path based on your project structure
 
-const LatestNews = ({ news, newsError, loading }) => {
-  // const LatestNews = () => {
-  //   const [news, setNews] = useState([]);
+const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [hiddenAds, setHiddenAds] = useState({});
   // const [newsErrornews, setNewsErrornews] = useState(null); // Track news fetch errors
   const [activeShare, setActiveShare] = useState(null);
-  
+
   const router = useRouter();
   const handleCloseAd = (index) => {
     setHiddenAds((prev) => ({ ...prev, [index]: true }));
   };
 
+
+
+  
   useEffect(() => {
     // const fetchNews = async () => {
     //   try {
@@ -60,7 +62,7 @@ const LatestNews = ({ news, newsError, loading }) => {
 
   const addWatermark = (imageSrc, id) => {
     return new Promise((resolve) => {
-      const img = new Image();
+      const img = new window.Image(); 
       img.crossOrigin = "Anonymous";
       img.onload = () => {
         const canvas = document.createElement("canvas");
@@ -157,10 +159,11 @@ const LatestNews = ({ news, newsError, loading }) => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto h-screen overflow-hidden mb-10">
-      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block">
-        Latest News
+    <div className="w-full  mx-auto  h-screen lg:h-[1050px]">
+      <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-24 z-20 hidden lg:block">
+        {selectedCategoryName}
       </h2>
+
       {newsError && (
         <div className="text-red-600 bg-red-100 p-4 my-4 rounded">
           {newsError}
@@ -187,27 +190,63 @@ const LatestNews = ({ news, newsError, loading }) => {
 
             return (
               <div key={article?.id} className="mb-6 relative">
-                <div className="relative">
-                  <img
-                    src={
-                      loadedImages[imageKey] ||
-                      `${process.env.NEXT_PUBLIC_API_URL}/${article?.image}`
-                    }
-                    alt={article?.title}
-                    className="w-full h-auto object-cover"
-                    onError={(e) =>
-                      (e.target.src = "/path/to/fallback-image.jpg")
-                    }
+                <div className="relative w-full h-72 overflow-hidden">
+                  {/* Background Blurred Image */}
+                    <div
+                      className="absolute inset-0 bg-fill bg-center filter blur-xl scale-110"
+                      style={{
+                        backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}/${article?.image})`,
+                      }}
+                    ></div>
+
+                  {/* Main Clear Image */}
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${article?.image}`}
+                    alt="news"
+                    layout="fill"
+                    objectFit="contain"
+                    className="relative z-10"
                   />
                 </div>
-                <h3 className="text-xl font-semibold mt-3">
+
+
+                <div className="relative group flex justify-between items-center ">
+                  {/* <div className="flex justify-between items-center"> */}
+                    <p  className="flex justify-end items-center gap-3 mt-3"><Image src="/images/categories/Group56.png" width={18} height={50} alt="time" /> <span className="text-[#787878] text-sm md:text-base">{formatDate(article.updated_at)}</span></p>
+                    <div >
+                      <button
+                        onClick={() =>
+                          setActiveShare((prev) =>
+                            prev === article.id ? null : article.id
+                          )
+                        }
+                        className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
+                      >
+                        <Image src="/images/categories/Vector.png" width={25} height={50} alt="news share"/>
+                        {/* <FiShare2 /> */}
+                      </button>
+                      <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
+                        Share this News
+                      </div>
+                    </div>
+                  {/* </div> */}
+
+                  {activeShare === article.id && (
+                    <SharePopup
+                      url={`https://www.worldonetv.in/news/${article.id}`}
+                      headline={article.heading}
+                      onClose={() => setActiveShare(null)}
+                    />
+                  )}
+                </div>
+                <h3 className="text-lg md:text-xl font-semibold mt-3">
                   {article?.heading}
                 </h3>
 
                 <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
                   {!isExpanded ? (
                     <>
-                      <p>{shortText}...</p>
+                      <p className="text-sm md:text-base">{shortText}...</p>
                       {showReadMore && (
                         <div className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
                           <button
@@ -257,27 +296,6 @@ const LatestNews = ({ news, newsError, loading }) => {
                 )}
 
 
-                <div className="relative group flex justify-end">
-                  <button
-                    onClick={() =>
-                      setActiveShare((prev) => (prev === article.id ? null : article.id))
-                    }
-                    className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
-                  >
-                    <FiShare2 />
-                  </button>
-                  <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
-                    Share this News
-                  </div>
-
-                  {activeShare === article.id && (
-                    <SharePopup
-                      url={`https://www.worldonetv.in/news/${article.id}`}
-                      headline={article.heading}
-                      onClose={() => setActiveShare(null)}
-                    />
-                  )}
-                </div>
 
 
 
@@ -291,11 +309,11 @@ const LatestNews = ({ news, newsError, loading }) => {
                       ✕
                     </button>
                     <img
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/${
-                        ads[index % ads?.length]?.ads_image
-                      }`}
-                      alt={ads[index % ads?.length]?.ads_name || "Advertisement"}
-                      className="w-full"
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${ads[index % ads?.length]?.ads_image}`}
+                      alt={
+                        ads[index % ads?.length]?.ads_name || "Advertisement"
+                      }
+                      className="w-full h-96"
                     />
                   </div>
                 )}

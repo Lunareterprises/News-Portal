@@ -51,3 +51,24 @@ export const getBanner = async () => {
     }
 }
 
+export const getYoutubeVdos = async () => {
+  try {
+      const response = await axiosInstance.get(API_ENDPOINTS.LIST_YOUTUBE)
+      return response.data
+    } catch (error) {
+      console.error("Error in addCategory:", error.response?.data || error.message)
+      throw error // rethrow to be caught in handleSubmit
+    }
+}
+
+export const getGallery = async () => {
+  try {
+      const response = await axiosInstance.get(API_ENDPOINTS.LIST_GALLERY)
+      return response.data
+    } catch (error) {
+      console.error("Error in addCategory:", error.response?.data || error.message)
+      throw error // rethrow to be caught in handleSubmit
+    }
+}
+
+
