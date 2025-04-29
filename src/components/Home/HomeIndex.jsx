@@ -7,21 +7,27 @@ import TrendingNews from "./TrendingNews";
 import ResponsiveSmalview from "./ResponsiveSmalview";
 import HeaderAdd from "./HeaderAdd";
 import { listNewsByCategory } from "@/services/newsService";
+// import BreakingNewsBanner from "./BreakingNewsBanner";
+import Footer from "../commonUI/Footer/Footer";
+import YouTubeCarousel from "./YouTubeCarousel";
+import Gallery from "./Gallery";
 
 function HomeIndex() {
   const [news, setNews] = useState([]);
   const [newsError, setNewsError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedCategoryName, setSelectedCategoryName] = useState("Latest News");
 
-  const fetchNewsForCategory = async (categoryId) => {
+
+  
+  const fetchNewsForCategory = async (categoryId, categoryName = "Latest News") => {
     try {
       setLoading(true);
       const response = await listNewsByCategory({ categoryId });
-      
+  
       if (response?.result === true) {
         const filteredNews = response?.data.filter(
-          (article) =>    
-            article?.displayOn === "latest-news" || article?.displayOn === "both"
+          (article) => article?.displayOn === "latest-news" || article?.displayOn === "both"
         );
         setNews(filteredNews);
       } else {
@@ -30,32 +36,49 @@ function HomeIndex() {
       }
     } catch (error) {
       console.error("Error fetching news:", error);
-      // setNewsError("Failed to load news. Please try again later.");
     } finally {
-      setLoading(false); // stop loader
+      setLoading(false);
+      setSelectedCategoryName(categoryName); // 🛑 Update the category name here
     }
   };
   
 
-  // Fetch news for the default category "LATEST" when the component mounts
   useEffect(() => {
     fetchNewsForCategory("");
-  }, []); // Empty dependency array means this runs once when the component is mounted
+  }, []); 
 
   return (
-    <div className="px-4  md:px-10 lg:px-20 xl:px-32">
+    <div>
+      <div className="px-4  md:px-10 lg:px-20 xl:px-32">
       <Header />
       <HeaderAdd />
-      <div className="flex flex-col gap-6 lg:flex-row">
-        <SideMenu onCategorySelect={fetchNewsForCategory} />
-        <div className="hidden lg:flex flex-col gap-6 md:flex-row flex-1">
-          <LatestNews news={news} newsError={newsError} loading={loading} />
-          <TrendingNews />
+      <div className="flex flex-col  lg:flex-col">
+        <div className="flex gap-6 lg:flex-row">
+        <SideMenu onCategorySelect={(categoryId, categoryName) => fetchNewsForCategory(categoryId, categoryName)} />
+
+          <div className="hidden lg:flex flex-col gap-6 md:flex-row ">
+            <div className="flex flex-col w-full  h-[150vh] ">
+              {/* <BreakingNewsBanner /> */}
+              <LatestNews news={news} newsError={newsError} loading={loading} selectedCategoryName={selectedCategoryName} />
+
+            </div>
+            <div className="w-2/4 ">
+              <TrendingNews  height="1000px"/>
+            </div>
+          </div>
+        </div>
+        <div className="hidden lg:block">
+          <YouTubeCarousel />
+          <Gallery />
         </div>
       </div>
+
       <div className="block lg:hidden">
-        <ResponsiveSmalview news={news} newsError={newsError}/>
+        <ResponsiveSmalview news={news} newsError={newsError} selectedCategoryName={selectedCategoryName}/>
       </div>
+      {/* <Footer /> */}
+    </div>
+    
     </div>
   );
 }

@@ -5,9 +5,10 @@ import AdsComponent from "./AdsComponent";
 import { listNews } from "@/services/newsService";
 import DOMPurify from "dompurify";
 import SharePopup from "./SharePopup";
-import { FiShare2 } from "react-icons/fi";
+import Image from "next/image";
+import formatDate from '@/utils/formatDate'; // adjust the path based on your project structure
 
-const TrendingNews = () => {
+const TrendingNews = ({ height  }) => {
   const [expanded, setExpanded] = useState({});
   const [news, setNews] = useState([]);
   const [error, setError] = useState(null);
@@ -19,14 +20,14 @@ const TrendingNews = () => {
       try {
         setLoading(true);
 
-        const dataNews = {
-          categoryId: "",
-        };
-
-        const response = await listNews(dataNews);
+        const response = await listNews({ categoryId: "" });
         const data = response.data;
+
         if (response?.result === true) {
-          if (!Array.isArray(data)) console.log("Invalid news data format");
+          if (!Array.isArray(data)) {
+            console.log("Invalid news data format");
+            return;
+          }
 
           const filteredNews = data.filter(
             (article) =>
@@ -34,12 +35,13 @@ const TrendingNews = () => {
               article?.displayOn === "both"
           );
           setNews(filteredNews);
-          setError(null); // Clear any previous error
+          setError(null);
         } else {
           console.log(response.message);
         }
       } catch (err) {
         console.error("Error fetching news:", err);
+        setError("Something went wrong while fetching news.");
       } finally {
         setLoading(false);
       }
@@ -53,7 +55,10 @@ const TrendingNews = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto h-screen overflow-auto scrollbar-hide mb-10">
+     <div
+        className="w-full mx-auto overflow-auto scrollbar-hide mb-10"
+        style={{ height }}
+     >
       <AdsComponent />
 
       <div className="hidden lg:block">
@@ -61,7 +66,7 @@ const TrendingNews = () => {
       </div>
 
       <h2 className="text-2xl font-semibold bg-[#2872AF] text-white py-2 px-6 w-full sticky top-0 hidden lg:block z-10">
-        Trending & Breaking News
+        Trending News
       </h2>
 
       {error && (
@@ -73,96 +78,84 @@ const TrendingNews = () => {
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
           </div>
-        ) : Array.isArray(news) && news?.length > 0 ? (
+        ) : Array.isArray(news) && news.length > 0 ? (
           news.map((article) => {
             const isExpanded = expanded[article.id];
             const rawContent = article.content || "";
-
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = rawContent;
             const plainText = tempDiv.textContent || tempDiv.innerText || "";
-            const shortText = plainText.substring(0, 250);
-            const showReadMore = plainText?.length > 250;
-
+            const shortText = plainText.substring(0, 30);
             const fallbackImage = `${process.env.NEXT_PUBLIC_API_URL}/${article.image}`;
 
             return (
-              <div key={article.id} className="mb-6 relative">
-                <img
-                  src={fallbackImage}
-                  alt={article.heading}
-                  className="w-full h-auto object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/default-news-image.jpg"; // fallback image
-                    console.warn("Image failed to load:", fallbackImage);
-                  }}
-                />
-                <h3 className="text-xl font-semibold mt-3">
-                  {article.heading}
-                </h3>
+              <div
+                key={article.id}
+                className="mb-4 p-2 border border-gray-200 rounded-md shadow-sm bg-white"
+              >
+                <div className="flex flex-row gap-6 items-start">
+                  <Image 
+                    width={100}
+                    height={100}
+                    src={fallbackImage}
+                    alt={article.heading}
+                    className="w-28 h-28 object-contain rounded-md"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/default-news-image.jpg";
+                    }}
+                  />
 
-                <div className="text-gray-700 text-sm mt-4 leading-relaxed relative">
-                  {!isExpanded ? (
-                    <>
-                      <p>{shortText}...</p>
-                      {showReadMore && (
-                        <div className="absolute left-0 right-0 bottom-0 w-full h-24 flex items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
-                          <button
-                            onClick={() => toggleReadMore(article.id)}
-                            className="bg-[#2872AF] font-medium text-white px-4 py-1 cursor-pointer whitespace-nowrap"
-                          >
-                            Read More
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(rawContent, {
-                          ALLOWED_ATTR: ["style", "class", "id"],
-                          ALLOWED_TAGS: [
-                            "*",
-                            "b",
-                            "i",
-                            "u",
-                            "a",
-                            "img",
-                            "p",
-                            "h1",
-                            "h2",
-                            "h3",
-                            "h4",
-                            "h5",
-                            "h6",
-                            "strong",
-                            "em",
-                          ],
-                        }),
-                      }}
-                    />
-                  )}
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href={`https://www.worldonetv.in/news/${article.id}`}
+                      className="text-xs font-semibold text-gray-900 hover:text-[#2872AF]"
+                    >
+                      {article.heading}
+                    </a>
+
+                    <div className="text-gray-700 text-xs leading-relaxed relative w-full">
+                    <p>{shortText}...</p>
+                    </div>
+
+                    {isExpanded && (
+                      <button
+                        onClick={() => toggleReadMore(article.id)}
+                        className="bg-[#ff773a] font-medium text-white px-4 py-1 mt-2"
+                      >
+                        Read Less
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {isExpanded && (
-                  <button
-                    onClick={() => toggleReadMore(article.id)}
-                    className="bg-[#ff773a] font-medium text-white px-4 py-1 block mb-10 cursor-pointer mt-6"
-                  >
-                    Read Less
-                  </button>
-                )}
+                <div className="relative group flex justify-between items-center mt-3">
+                  <p className="flex items-center gap-2 text-[#787878] text-xs">
+                    <Image
+                      src="/images/categories/Group56.png"
+                      width={18}
+                      height={18}
+                      alt="time"
+                    />
+                    {formatDate(article.updated_at)}
+                  </p>
 
-                <div className="relative group flex justify-end">
                   <button
                     onClick={() =>
-                      setActiveShare((prev) => (prev === article.id ? null : article.id))
+                      setActiveShare((prev) =>
+                        prev === article.id ? null : article.id
+                      )
                     }
-                    className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
+                    className="ml-4 px-3 py-1 rounded cursor-pointer"
                   >
-                    <FiShare2 />
+                    <Image
+                      src="/images/categories/Vector.png"
+                      width={15}
+                      height={25}
+                      alt="news share"
+                    />
                   </button>
+
                   <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
                     Share this News
                   </div>

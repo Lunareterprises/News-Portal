@@ -76,10 +76,11 @@ const SideMenuCategories = ({onCategorySelect}) => {
   // Function to handle category selection and trigger the backend call
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    onCategorySelect(category.id); // Passing category id to parent component
+    onCategorySelect(category.id, category.name); // 🛑 Pass both id and name
     setIsNewsOpen(false);
     setIsDistrictOpen(false);
   };
+  
 
   // // Example backend call with category ID
   // const fetchCategoryData = async (categoryId) => {
@@ -95,9 +96,8 @@ const SideMenuCategories = ({onCategorySelect}) => {
   return (
     <>
       {/* Sidebar */}
-      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block">
-        <ul className="space-y-2 overflow-y-auto max-h-[calc(100vh)] scrollbar-hide scroll-smooth">
-          {/* Latest News */}
+      <div className="w-1/5 min-w-[250px] bg-white h-screen hidden lg:block sticky top-0 ">
+        <ul className="space-y-2 overflow-y-auto max-h-[calc(100vh)] ">
           <li
             className={`flex text-sm items-center gap-3 px-6 py-2 cursor-pointer ${
               selectedCategory.name === "Latest News"
@@ -116,7 +116,6 @@ const SideMenuCategories = ({onCategorySelect}) => {
             <span>Latest News</span>
           </li>
 
-          {/* News Dropdown */}
           <li className="flex flex-col text-sm">
             <div
               className={`flex justify-between w-full px-6 py-2 items-center cursor-pointer ${
@@ -155,7 +154,6 @@ const SideMenuCategories = ({onCategorySelect}) => {
             )}
           </li>
 
-          {/* District Dropdown */}
           <li className="flex flex-col text-sm">
             <div
               className={`flex justify-between w-full items-center cursor-pointer px-6 py-2 ${
@@ -196,7 +194,6 @@ const SideMenuCategories = ({onCategorySelect}) => {
             )}
           </li>
 
-          {/* Dynamic Categories */}
           {categories?.map((category) => (
             <li
               key={category.id}
@@ -223,11 +220,10 @@ const SideMenuCategories = ({onCategorySelect}) => {
       {/* Mobile Scrollable Menu */}
       <div
         ref={scrollContainerRef}
-        className="tracking-wide lg:hidden w-full flex items-center overflow-x-scroll h-10 overflow-y-hidden relative text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
-      >
+        className="tracking-wide lg:hidden w-full  flex items-center overflow-x-scroll h-10 overflow-y-hidden  text-sm whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"      >
         {/* Latest News */}
         <button
-          className={`px-4 py-2 whitespace-nowrap ${
+          className={`px-4 py-2 whitespace-nowrap cursor-pointer ${
             selectedCategory.name === "Latest News"
               ? "text-[#2872AF] font-semibold"
               : "bg-gray-100"
@@ -238,9 +234,9 @@ const SideMenuCategories = ({onCategorySelect}) => {
         </button>
 
         {/* News Dropdown */}
-        <div className="relative inline-flex dropdown-menu">
+        <div className="relative inline-flex dropdown-menu  ">
           <button
-            className={`px-4 py-2 flex items-center whitespace-nowrap ${
+            className={`px-4 py-2 flex items-center whitespace-nowrap cursor-pointer ${
               newsFrom.some((item) => isSelected(item))
                 ? "text-[#2872AF] font-semibold"
                 : "bg-gray-100"
@@ -274,7 +270,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
         {/* District Dropdown */}
         <div className="relative inline-flex dropdown-menu">
           <button
-            className={`px-4 py-2 flex items-center whitespace-nowrap ${
+            className={`px-4 py-2 flex items-center whitespace-nowrap cursor-pointer ${
               districtsInKerala?.some((item) => isSelected(item))
                 ? "text-[#2872AF] font-semibold"
                 : "bg-gray-100"
@@ -309,10 +305,10 @@ const SideMenuCategories = ({onCategorySelect}) => {
         {categories?.map((category) => (
           <button
             key={category.id}
-            className={`px-4 py-2 whitespace-nowrap ${
+            className={`px-4 py-2 whitespace-nowrap cursor-pointer ${
               selectedCategory.name === category.name
-                ? "text-[#2872AF] font-semibold"
-                : "bg-gray-100"
+                ? "text-[#2872AF] font-semibold "
+                : "bg-gray-100 "
             }`}
             onClick={() => handleCategorySelect({ id: category.id, name: category.name })}
           >

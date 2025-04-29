@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import Carousel from "./Carousel_component";
 import LatestNews from "./LatestNews";
 import TrendingNews from "./TrendingNews";
+import YouTubeCarousel from "./YouTubeCarousel";
+// import BreakingNewsBanner from "./BreakingNewsBanner";
+import Gallery from "./Gallery";
 
-function ResponsiveSmalview({news, newsError}) {
+function ResponsiveSmalview({news, newsError, selectedCategoryName}) {
   const [activeTab, setActiveTab] = useState("latest");
 
 
@@ -15,7 +18,8 @@ function ResponsiveSmalview({news, newsError}) {
         <Carousel />
       </div>
 
-      <div className="sticky top-24 bg-[#F5F5F5] z-40 ">
+      <div className="sticky top-24  bg-[#F5F5F5] z-20 ">
+      {/* <BreakingNewsBanner /> */}
         <div className="flex gap-4 py-3 tracking-wide">
           <button
             className={`px-4 py-2 text-sm whitespace-nowrap font-normal ${
@@ -35,10 +39,13 @@ function ResponsiveSmalview({news, newsError}) {
           </button>
         </div>
       </div>
-
-      <div className="mt-4">
-        {activeTab === "latest" ? <LatestNews news={news} newsError={newsError}/> : <TrendingNews />}
+      
+      <div className="mt-4 ">
+        
+        {activeTab === "latest" ? <LatestNews news={news} newsError={newsError} selectedCategoryName={selectedCategoryName}/> : <TrendingNews />}
       </div>
+      <YouTubeCarousel />
+      <Gallery />
     </div>
   );
 }
