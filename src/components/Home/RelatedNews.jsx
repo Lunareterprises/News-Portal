@@ -177,6 +177,7 @@ const RelatedNews = ({ categoryId }) => {
                           width={15}
                           height={25}
                           alt="news share"
+                          unoptimized
                         />
                       </button>
 
