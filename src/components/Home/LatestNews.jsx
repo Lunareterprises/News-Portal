@@ -206,6 +206,7 @@ const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
                     layout="fill"
                     objectFit="contain"
                     className="relative z-10"
+                    unoptimized
                   />
                 </div>
 
