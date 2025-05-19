@@ -112,6 +112,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
               src="/images/categories/images1.png"
               alt="Latest News"
               className="w-8 h-8 rounded-full object-cover"
+              unoptimized
             />
             <span>Latest News</span>
           </li>
@@ -130,6 +131,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
                   src="/images/categories/images14.png"
                   alt="News"
                   className="w-8 h-8 rounded-full object-cover"
+                  unoptimized
                 />
                 <span>
                   {newsFrom.some((item) => isSelected(item)) ? selectedCategory.name : "News"}
@@ -168,6 +170,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
                   src="/images/categories/images15.png"
                   alt="District News"
                   className="w-8 h-8 rounded-full object-cover"
+                  unoptimized
                 />
                 <span>
                   {districtsInKerala.some((item) => isSelected(item))
@@ -210,6 +213,7 @@ const SideMenuCategories = ({onCategorySelect}) => {
                 height={32}
                 alt={category.name}
                 className="w-8 h-8 rounded-full object-cover"
+                unoptimized
               />
               <span>{category.name}</span>
             </li>

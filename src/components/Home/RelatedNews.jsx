@@ -136,6 +136,7 @@ const RelatedNews = ({ categoryId }) => {
                           onError={(e) => {
                             e.target.src = "/default-news-image.jpg";
                           }}
+                          unoptimized
                         />
                       </div>
 
@@ -160,6 +161,7 @@ const RelatedNews = ({ categoryId }) => {
                           width={18}
                           height={18}
                           alt="time"
+                          unoptimized
                         />
                         {formatDate(article.updated_at)}
                       </p>
