@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Script from "next/script"; // ✅ Import Script from Next.js
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,20 +20,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* ✅ AdSense script loaded after page is interactive */}
-        {/* <Script
-          id="adsense-script"
+        {/* ✅ Google AdSense Verification Snippet */}
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5296998056401590"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        /> */}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5296998056401590"
-          crossorigin="anonymous"></script>
+        ></script>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
