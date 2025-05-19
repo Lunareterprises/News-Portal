@@ -22,13 +22,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* ✅ AdSense script loaded after page is interactive */}
-        <Script
+        {/* <Script
           id="adsense-script"
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5296998056401590"
           crossOrigin="anonymous"
           strategy="afterInteractive"
-        />
+        /> */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5296998056401590"
+          crossorigin="anonymous"></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
