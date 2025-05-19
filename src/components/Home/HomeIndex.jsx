@@ -51,7 +51,7 @@ function HomeIndex() {
   return (
     <div>
       <div className="px-4  md:px-10 lg:px-20 xl:px-32">
-      <AdBanner />
+      {/* <AdBanner /> */}
       <Header />
       <HeaderAdd />
       <div className="flex flex-col  lg:flex-col">

@@ -164,6 +164,7 @@ const TrendingNews = ({ height  }) => {
                       e.target.onerror = null;
                       e.target.src = "/default-news-image.jpg";
                     }}
+                    unoptimized
                   />
 
                   <div className="flex flex-col gap-2">
@@ -196,6 +197,7 @@ const TrendingNews = ({ height  }) => {
                       width={18}
                       height={18}
                       alt="time"
+                      unoptimized
                     />
                     {formatDate(article.updated_at)}
                   </p>
@@ -213,6 +215,7 @@ const TrendingNews = ({ height  }) => {
                       width={15}
                       height={25}
                       alt="news share"
+                      unoptimized
                     />
                   </button>
 
