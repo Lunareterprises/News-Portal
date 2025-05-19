@@ -11,6 +11,7 @@ import { listNewsByCategory } from "@/services/newsService";
 import Footer from "../commonUI/Footer/Footer";
 import YouTubeCarousel from "./YouTubeCarousel";
 import Gallery from "./Gallery";
+import AdBanner from "../adSense/AdBanner";
 
 function HomeIndex() {
   const [news, setNews] = useState([]);
@@ -50,6 +51,7 @@ function HomeIndex() {
   return (
     <div>
       <div className="px-4  md:px-10 lg:px-20 xl:px-32">
+      <AdBanner />
       <Header />
       <HeaderAdd />
       <div className="flex flex-col  lg:flex-col">

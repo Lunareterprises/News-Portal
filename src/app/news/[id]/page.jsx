@@ -11,7 +11,8 @@ import Head from 'next/head';
 import TrendingNews from "@/components/Home/TrendingNews";
 import YouTubeCarousel from "@/components/Home/YouTubeCarousel";
 import SharePopup from "@/components/Home/SharePopup";
-import Image from "next/image";
+// import Image from "next/image";
+import NextImage from "next/image";
 
 import RelatedNews from "@/components/Home/RelatedNews";
 import Gallery from "@/components/Home/Gallery";
@@ -133,7 +134,9 @@ const ArticlePage = () => {
             <h1 className="text-lg md:text-2xl font-bold text-center mb-4">{article.heading}</h1>
 
             {article.image && (
-              <img
+              <NextImage
+                width={100}
+                height={100}
                 src={`${process.env.NEXT_PUBLIC_API_URL}/${article.image}`}
                 alt={article.heading}
                 className="w-full h-auto md:h-96 object-contain"
@@ -142,7 +145,7 @@ const ArticlePage = () => {
 
             <div className="relative flex justify-between items-center">
               <p className="flex justify-end items-center gap-3 mt-3">
-              <Image src="/images/categories/Group56.png" width={18} height={50} alt="time" />
+              <NextImage src="/images/categories/Group56.png" width={18} height={50} alt="time" />
 
                 <span className="text-[#787878]">{formatDate(article.updated_at)}</span>
               </p>
@@ -153,7 +156,7 @@ const ArticlePage = () => {
                   }
                   className="ml-4 mt-2 px-3 py-1 rounded cursor-pointer"
                 >
-                  <Image src="/images/categories/Vector.png" width={18} height={50} alt="share" />
+                  <NextImage src="/images/categories/Vector.png" width={18} height={50} alt="share" />
                 </button>
                 <div className="absolute whitespace-nowrap bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded">
                   Share this News
