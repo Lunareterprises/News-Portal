@@ -17,6 +17,7 @@ import NextImage from "next/image";
 import RelatedNews from "@/components/Home/RelatedNews";
 import Gallery from "@/components/Home/Gallery";
 import formatDate from '@/utils/formatDate';
+import AdBanner from "@/components/adSense/AdBanner";
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -125,6 +126,7 @@ const ArticlePage = () => {
       </Head>
 
       <div className="px-4 py-10 md:px-20 lg:px-40">
+        <AdBanner />
         <Header />
         <HeaderAdd />
 

@@ -1,10 +1,16 @@
-import { useEffect } from "react";
+"use client";
+import { useEffect, useRef } from "react";
 
 export default function AdBanner() {
+  const adRef = useRef(null);
+
   useEffect(() => {
     try {
-      if (typeof window !== "undefined") {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      if (window && adRef.current) {
+        // Only push if the ins tag hasn't been initialized yet
+        if (!adRef.current.getAttribute("data-adsbygoogle-status")) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        }
       }
     } catch (e) {
       console.error("Adsense error:", e);
@@ -13,8 +19,9 @@ export default function AdBanner() {
 
   return (
     <ins
-      className="adsbygoogle" // ✅ FIXED
-      style={{ display: "block" }}
+      ref={adRef}
+      className="adsbygoogle"
+      style={{ display: "block", minHeight: "100px" }}
       data-ad-client="ca-pub-5296998056401590"
       data-ad-slot="2226315840"
       data-ad-format="auto"
