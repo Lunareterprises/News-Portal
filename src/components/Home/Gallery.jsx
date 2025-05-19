@@ -60,7 +60,7 @@ function Gallery() {
               swiper.navigation.init();
               swiper.navigation.update();
             }}
-            modules={[Navigation, Pagination, Autoplay]}
+            modules={[Navigation, Autoplay]}
             spaceBetween={10}
             loop={images.length > 1}
             autoplay={{ delay: 2500, disableOnInteraction: false }}
@@ -92,6 +92,7 @@ function Gallery() {
                     src={`${process.env.NEXT_PUBLIC_API_URL}/${img.g_file}`}
                     alt={`Gallery ${img.g_id}`}
                     className="w-full h-64 object-cover"
+                    
                   />
                 </div>
               </SwiperSlide>

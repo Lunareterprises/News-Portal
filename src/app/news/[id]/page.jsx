@@ -126,7 +126,7 @@ const ArticlePage = () => {
       </Head>
 
       <div className="px-4 py-10 md:px-20 lg:px-40">
-        <AdBanner />
+        {/* <AdBanner /> */}
         <Header />
         <HeaderAdd />
 
