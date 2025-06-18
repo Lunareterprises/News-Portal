@@ -13,6 +13,8 @@ import YouTubeCarousel from "@/components/Home/YouTubeCarousel";
 import SharePopup from "@/components/Home/SharePopup";
 // import Image from "next/image";
 import NextImage from "next/image";
+import parse, { domToReact } from 'html-react-parser';
+
 
 import RelatedNews from "@/components/Home/RelatedNews";
 import Gallery from "@/components/Home/Gallery";
@@ -29,6 +31,23 @@ const ArticlePage = () => {
 
   const mainRef = useRef(null);
 
+  const formatArticleContent = (htmlString) => {
+    return parse(htmlString, {
+      replace: (node) => {
+        if (node.name === 'p' && node.children && node.children.length > 0) {
+          const text = node.children.map((child) => child.data).join(' ').trim();
+          const words = text.split(/\s+/);
+          const firstWord = words.shift();
+          return (
+            <p className="text-sm leading-relaxed text-gray-700 mb-3">
+              <span className="ml-8 inline-block">{firstWord}</span>{' '}
+              {words.join(' ')}
+            </p>
+          );
+        }
+      },
+    });
+  };
   const fetchArticle = async () => {
     try {
       const response = await listNewsByCategory();
@@ -175,12 +194,9 @@ const ArticlePage = () => {
               )}
             </div>
 
-            <div
-              className="prose w-full mt-6"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(article.content),
-              }}
-            />
+            <div className="w-full mt-4">
+              {formatArticleContent(DOMPurify.sanitize(article.content))}
+            </div>
           </main>
 
           {/* Sidebar */}

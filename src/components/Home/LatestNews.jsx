@@ -8,6 +8,26 @@ import SharePopup from "./SharePopup";
 import Image from "next/image";
 import formatDate from '@/utils/formatDate'; // adjust the path based on your project structure
 
+
+function wrapFirstWordInPTags(html) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  const paragraphs = tempDiv.querySelectorAll("p");
+  paragraphs.forEach((p) => {
+    const text = p.innerHTML.trim();
+    const match = text.match(/^(\s*\S+)([\s\S]*)$/); // first word
+    if (match) {
+      const firstWord = match[1];
+      const rest = match[2];
+      p.innerHTML = `<span class="ml-8">${firstWord}</span>${rest}`;
+    }
+  });
+
+  return tempDiv.innerHTML;
+}
+
+
 const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
   const [ads, setAds] = useState([]);
   const [expanded, setExpanded] = useState({});
@@ -261,29 +281,20 @@ const LatestNews = ({ news, newsError, loading, selectedCategoryName }) => {
                     </>
                   ) : (
                     <div
+                      className="[&>p]:mb-3 [&>p]:text-sm [&>p]:leading-relaxed text-gray-700 mt-4"
                       dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(rawContent, {
-                          ALLOWED_ATTR: ["style", "class", "id"],
-                          ALLOWED_TAGS: [
-                            "*",
-                            "b",
-                            "i",
-                            "u",
-                            "a",
-                            "img",
-                            "p",
-                            "h1",
-                            "h2",
-                            "h3",
-                            "h4",
-                            "h5",
-                            "h6",
-                            "strong",
-                            "em",
-                          ],
-                        }),
+                        __html: wrapFirstWordInPTags(
+                          DOMPurify.sanitize(rawContent, {
+                            ALLOWED_ATTR: ["style", "class", "id"],
+                            ALLOWED_TAGS: [
+                              "*", "b", "i", "u", "a", "img", "p", "h1", "h2",
+                              "h3", "h4", "h5", "h6", "strong", "em"
+                            ],
+                          })
+                        ),
                       }}
                     />
+
                   )}
                 </div>
 
